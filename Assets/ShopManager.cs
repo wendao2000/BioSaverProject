@@ -22,7 +22,7 @@ public class ShopManager : MonoBehaviour {
         }
 	}
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
@@ -30,4 +30,12 @@ public class ShopManager : MonoBehaviour {
             //gm.UpdateInteraction("Shop");
         }
     }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            collide = false;
+            //gm.UpdateInteraction("Normal");
+        }
 }
