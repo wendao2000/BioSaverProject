@@ -11,8 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3f55cb70c16e446a9f75744863d354, type: 3}
   m_Name: StronkWeapon
   m_EditorClassIdentifier: 
+  itemID: 10
   itemName: Stronk Weapon
   itemSprite: {fileID: 0}
+  itemPrice: 100
   itemSlot: 0
   minAtk: 10
   maxAtk: 20

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Plastic Armor
   itemSprite: {fileID: 0}
+  itemPrice: 10
   itemSlot: 1
   armorValue: 20
   maxDurability: 50

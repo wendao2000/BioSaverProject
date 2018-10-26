@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public enum ItemSlot
 {
     Weapon,
-    Armor
+    Armor,
+    Item
 };
 
 public enum ItemRarity
@@ -21,7 +22,7 @@ public enum ItemCategory
     Potion
 };
 
-public class Inventory : MonoBehaviour
+public class CharacterInventory : MonoBehaviour
 {
     
 }

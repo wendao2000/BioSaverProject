@@ -13,5 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Small Potion
   itemSprite: {fileID: 0}
+  itemPrice: 5
+  itemSlot: 0
   itemCategory: 0
   value: 10

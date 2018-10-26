@@ -13,6 +13,13 @@ public class ShopContent
 [RequireComponent(typeof(RectTransform), typeof(Image), typeof(Button))]
 public class ShopItem : MonoBehaviour
 {
+
+    public int itemID;
+    public string itemName;
+    public Sprite itemSprite;
+    public ItemSlot itemSlot;
+    public int itemPrice;
+
     Navigation nv = new Navigation
     {
         mode = Navigation.Mode.None
@@ -21,7 +28,7 @@ public class ShopItem : MonoBehaviour
     void Awake()
     {
         GetComponent<Button>().navigation = nv;
-        GetComponent<Button>().onClick.AddListener(delegate { FindObjectOfType<ShopManager>().Buy(name); });
+        GetComponent<Button>().onClick.AddListener(delegate { StartCoroutine(FindObjectOfType<ShopManager>().Buy(itemID, itemPrice)); });
         transform.SetParent(FindObjectOfType<ShopManager>().shopContentPanel.transform);
         GetComponent<RectTransform>().localScale = Vector3.one;
     }

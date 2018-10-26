@@ -2,17 +2,21 @@
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using TMPro;
+using System.Collections;
 
 public class ShopManager : MonoBehaviour
 {
 
-    Character ch;
+    CharacterMovement ch;
+    CharacterInteraction ci;
     GameManager gm;
+    CharacterInventory cv;
 
     public GameObject shopContentPanel;
     public GameObject confirmationPanel;
 
     bool collide = false;
+    bool buyConfirm = false;
 
     public ShopContent shopContent;
 
@@ -21,8 +25,10 @@ public class ShopManager : MonoBehaviour
 
     void Awake()
     {
-        ch = FindObjectOfType<Character>();
+        ch = FindObjectOfType<CharacterMovement>();
+        ci = FindObjectOfType<CharacterInteraction>();
         gm = FindObjectOfType<GameManager>();
+        cv = FindObjectOfType<CharacterInventory>();
     }
 
     void Start()
@@ -49,43 +55,57 @@ public class ShopManager : MonoBehaviour
         {
             for (int i = 0; i < shopContent.weapon.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + itemCount.ToString(), typeof(ShopItem)));
+                shopList.Add(new GameObject("Item " + itemCount.ToString()));
                 shopList[itemCount].AddComponent<Weapon>().source = shopContent.weapon[i].weapon;
                 itemCount++;
             }
 
             for (int i = 0; i < shopContent.armor.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + itemCount.ToString(), typeof(ShopItem)));
+                shopList.Add(new GameObject("Item " + itemCount.ToString()));
                 shopList[itemCount].AddComponent<Armor>().source = shopContent.armor[i].armor;
                 itemCount++;
             }
 
             for (int i = 0; i < shopContent.item.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + itemCount.ToString(), typeof(ShopItem)));
+                shopList.Add(new GameObject("Item " + itemCount.ToString()));
                 shopList[itemCount].AddComponent<Item>().source = shopContent.item[i].item;
                 itemCount++;
             }
         }
     }
 
-    public void Buy(string index)
+    public IEnumerator Buy(int itemID, int itemPrice)
     {
-        //reset confirmation panel text
+        //reset confirmation text
         confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Are you sure about this?";
         confirmationPanel.SetActive(true);
+
+        while (confirmationPanel.activeSelf)
+        {
+            yield return null;
+        }
+
+        if (buyConfirm)
+        {
+            //if got enough money
+            if (ci.currentMoney >= itemPrice)
+            {
+                ci.currentMoney -= itemPrice;
+                ci.
+            }
+        }
     }
 
-    public void ConfirmYes()
+    public void Confirm(bool value)
     {
-        //confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Successfully bought!";
-        //do something before closing the confirmation panel
-        confirmationPanel.SetActive(false);
-    }
+        if (value == true)
+        {
+            buyConfirm = true;
+        }
 
-    public void ConfirmNo()
-    {
+        else buyConfirm = false;
         confirmationPanel.SetActive(false);
     }
 

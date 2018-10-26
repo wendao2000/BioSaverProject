@@ -4,8 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Weapon", menuName = "Inventory/Item")]
 public class ScriptItem : ScriptableObject
 {
-    public string itemName;
+    public int itemID = -1;
+    public string itemName = "Item";
     public Sprite itemSprite = null;
+    public int itemPrice = 0;
+    public ItemSlot itemSlot = ItemSlot.Item;
     public ItemCategory itemCategory;
     public int value;
 }

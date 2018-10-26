@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class Weapon : ShopItem
 {
 
     public ScriptWeapon source;
-
-    public string itemName;
-    public Sprite itemSprite;
-    public ItemSlot itemSlot;
+    
     public int minAtk;
     public int maxAtk;
     public int critChance;
@@ -16,8 +13,11 @@ public class Weapon : MonoBehaviour
 
     void Start()
     {
+        itemID = source.itemID;
         itemName = source.itemName;
+        itemSprite = source.itemSprite;
         itemSlot = source.itemSlot;
+        itemPrice = source.itemPrice;
         minAtk = source.minAtk;
         maxAtk = source.maxAtk;
         critChance = source.critChance;

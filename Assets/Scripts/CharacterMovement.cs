@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class Character : MonoBehaviour
+public class CharacterMovement : MonoBehaviour
 {
 
     Rigidbody2D rb;
