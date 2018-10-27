@@ -7,19 +7,25 @@ public class CharacterMovement : MonoBehaviour
     Rigidbody2D rb;
 
     //Movement
+    [Header("Movement Stuff")]
     public float moveSpeed;
-    float direction;
-
-
+    float directionX;
+    float directionY;
 
     //Jump
+    [Header("Jumping Stuff")]
     public float jumpVelocity;
-    [SerializeField] float fallMultiplier = 2.5f;
-    [SerializeField] float lowJumpMultiplier = 2f;
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
 
-    //general
+    //General
+    [Header("General Stuff")]
     //[HideInInspector]
     public bool paralyzed = false;
+    public bool grounded = true;
+
+    public LayerMask groundLayer;//the layer on which we can be grounded
+    [SerializeField] float radius;
 
     void Awake()
     {
@@ -28,10 +34,14 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
+        directionX = CrossPlatformInputManager.GetAxisRaw("Horizontal");
+        directionY = CrossPlatformInputManager.GetAxisRaw("Vertical");
+
         #region BetterJump script
-        if (rb.velocity.y < 0)
+        if (rb.velocity.y <= 0)
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+            GroundCheck();
         }
         else if (rb.velocity.y > 0 && !CrossPlatformInputManager.GetButton("Jump"))
         {
@@ -46,14 +56,48 @@ public class CharacterMovement : MonoBehaviour
         else
         {
             //horizontal direction movement a.k.a. running
-            direction = CrossPlatformInputManager.GetAxisRaw("Horizontal");
-            rb.velocity = new Vector2(direction * moveSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(directionX * moveSpeed, rb.velocity.y);
 
             //vertical direction movement a.k.a. jumping
             if (CrossPlatformInputManager.GetButtonDown("Jump"))
             {
-                rb.AddForce(new Vector2(0f, jumpVelocity));
+                if (grounded)
+                {
+                    rb.AddForce(new Vector2(0f, jumpVelocity));
+                    grounded = false;
+                }
             }
+        }
+    }
+
+    void GroundCheck()
+    {
+        if (Physics2D.Raycast(transform.position, Vector2.down, radius, groundLayer))
+        {
+            grounded = true;
+        }
+        else
+        {
+            grounded = false;
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Platform")
+        {
+            if (directionY < 0)
+            {
+                collision.gameObject.GetComponent<Collider2D>().enabled = false;
+            }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.tag == "Platform")
+        {
+            collision.gameObject.GetComponent<Collider2D>().enabled = true;
         }
     }
 }

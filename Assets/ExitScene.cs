@@ -20,6 +20,7 @@ public class ExitScene : MonoBehaviour
     public GroundLevel groundLevel;
 
     public bool collide = false;
+    public bool enabled = false;
 
     void Awake()
     {
@@ -28,62 +29,64 @@ public class ExitScene : MonoBehaviour
 
     void Update()
     {
-
-        if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
+        if (enabled)
         {
-            switch (groundLevel)
+            if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
             {
-                case GroundLevel.Zero:
-                    {
-                        //gm.startPos.y = -3f;
-                        PlayerPrefs.SetFloat("startPos.Y", -3f);
-                        break;
-                    }
-                case GroundLevel.One:
-                    {
-                        //gm.startPos.y = -1.5f;
-                        PlayerPrefs.SetFloat("startPos.Y", -1.5f);
-                        break;
-                    }
-                case GroundLevel.Two:
-                    {
-                        //gm.startPos.y = 0f;
-                        PlayerPrefs.SetFloat("startPos.Y", 0f);
-                        break;
-                    }
-                case GroundLevel.Three:
-                    {
-                        //gm.startPos.y = 1.5f;
-                        PlayerPrefs.SetFloat("startPos.Y", 1.5f);
-                        break;
-                    }
-                case GroundLevel.Four:
-                    {
-                        //gm.startPos.y = 3f;
-                        PlayerPrefs.SetFloat("startPos.Y", 3f);
-                        break;
-                    }
-            }
+                switch (groundLevel)
+                {
+                    case GroundLevel.Zero:
+                        {
+                            //gm.startPos.y = -3f;
+                            PlayerPrefs.SetFloat("startPos.Y", -3f);
+                            break;
+                        }
+                    case GroundLevel.One:
+                        {
+                            //gm.startPos.y = -1.5f;
+                            PlayerPrefs.SetFloat("startPos.Y", -1.5f);
+                            break;
+                        }
+                    case GroundLevel.Two:
+                        {
+                            //gm.startPos.y = 0f;
+                            PlayerPrefs.SetFloat("startPos.Y", 0f);
+                            break;
+                        }
+                    case GroundLevel.Three:
+                        {
+                            //gm.startPos.y = 1.5f;
+                            PlayerPrefs.SetFloat("startPos.Y", 1.5f);
+                            break;
+                        }
+                    case GroundLevel.Four:
+                        {
+                            //gm.startPos.y = 3f;
+                            PlayerPrefs.SetFloat("startPos.Y", 3f);
+                            break;
+                        }
+                }
 
-            switch(targetDirection)
-            {
-                case Direction.Left:
-                    {
-                        //gm.startPos.x = 8f;
-                        PlayerPrefs.SetFloat("startPos.X", 8f);
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-                        break;
-                    }
-                case Direction.Right:
-                    {
-                        //gm.startPos.x = -8f;
-                        PlayerPrefs.SetFloat("startPos.X", -8f);
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-                        break;
-                    }
-            }
+                switch (targetDirection)
+                {
+                    case Direction.Left:
+                        {
+                            //gm.startPos.x = 8f;
+                            PlayerPrefs.SetFloat("startPos.X", 8f);
+                            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+                            break;
+                        }
+                    case Direction.Right:
+                        {
+                            //gm.startPos.x = -8f;
+                            PlayerPrefs.SetFloat("startPos.X", -8f);
+                            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                            break;
+                        }
+                }
 
-            collide = false;
+                collide = false;
+            }
         }
     }
 

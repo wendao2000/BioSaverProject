@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
         cv = FindObjectOfType<CharacterInventory>();
         
         startPos = new Vector2(
-            PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", 0f) : 0f,
-            PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", 0f) : 0f);
+            PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", -8f) : -8f,
+            PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", 3f) : 3f);
         GameObject.Find("Character").transform.position = startPos;
     }
 
