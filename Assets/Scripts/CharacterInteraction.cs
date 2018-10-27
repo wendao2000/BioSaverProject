@@ -8,7 +8,6 @@ public class CharacterInteraction : MonoBehaviour
     //[HideInInspector]
     public bool interacting = false;
     //[HideInInspector]
-    public int currentMoney = 0;
 
     void Awake()
     {

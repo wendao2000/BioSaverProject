@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 
-public class Armor : ShopItem
+public class Armor : Inventory
 {
     public ScriptArmor source;
 

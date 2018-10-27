@@ -20,7 +20,7 @@ public class ExitScene : MonoBehaviour
     public GroundLevel groundLevel;
 
     public bool collide = false;
-    public bool enabled = false;
+    public new bool enabled = false;
 
     void Awake()
     {
@@ -33,6 +33,8 @@ public class ExitScene : MonoBehaviour
         {
             if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
             {
+                gm.Save();
+
                 switch (groundLevel)
                 {
                     case GroundLevel.Zero:
@@ -84,8 +86,6 @@ public class ExitScene : MonoBehaviour
                             break;
                         }
                 }
-
-                collide = false;
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public enum ItemSlot
@@ -24,5 +25,5 @@ public enum ItemCategory
 
 public class CharacterInventory : MonoBehaviour
 {
-    
+    public List<GameObject> inventoryList = new List<GameObject>();
 }

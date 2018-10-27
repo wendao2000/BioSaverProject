@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using TMPro;
@@ -13,7 +15,6 @@ public class ShopManager : MonoBehaviour
     public ShopContent shopContent;
 
     List<GameObject> shopList = new List<GameObject>();
-    int itemCount;
 
     void Awake()
     {
@@ -43,36 +44,31 @@ public class ShopManager : MonoBehaviour
 
     public void GenerateShopContent()
     {
-        itemCount = 0;
-
         if (shopContent.weapon.Length > 0 ||
             shopContent.armor.Length > 0 ||
             shopContent.item.Length > 0)
         {
             for (int i = 0; i < shopContent.weapon.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + (itemCount + 1).ToString() + ": " + shopContent.weapon[i].weapon.itemName));
-                shopList[itemCount].AddComponent<Weapon>().source = shopContent.weapon[i].weapon;
-                itemCount++;
+                shopList.Add(new GameObject(shopContent.weapon[i].weapon.itemName, typeof(ShopItem)));
+                shopList.LastOrDefault().AddComponent<Weapon>().source = shopContent.weapon[i].weapon;
             }
 
             for (int i = 0; i < shopContent.armor.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + (itemCount + 1).ToString() + ": " + shopContent.armor[i].armor.itemName));
-                shopList[itemCount].AddComponent<Armor>().source = shopContent.armor[i].armor;
-                itemCount++;
+                shopList.Add(new GameObject(shopContent.armor[i].armor.itemName, typeof(ShopItem)));
+                shopList.LastOrDefault().AddComponent<Armor>().source = shopContent.armor[i].armor;
             }
 
             for (int i = 0; i < shopContent.item.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + (itemCount + 1).ToString() + ": " + shopContent.item[i].item.itemName));
-                shopList[itemCount].AddComponent<Item>().source = shopContent.item[i].item;
-                itemCount++;
+                shopList.Add(new GameObject(shopContent.item[i].item.itemName, typeof(ShopItem)));
+                shopList.LastOrDefault().AddComponent<Item>().source = shopContent.item[i].item;
             }
         }
     }
 
-    public IEnumerator Buy(int itemID, int itemPrice)
+    public IEnumerator Buy(GameObject objectToBuy)
     {
         FirstState();
 
@@ -85,10 +81,13 @@ public class ShopManager : MonoBehaviour
         {
             SecondState();
 
-            if (gm.ci.currentMoney >= itemPrice)
+            if (gm.currentMoney >= objectToBuy.GetComponent<Inventory>().itemPrice)
             {
                 FinalState(true);
-                gm.ci.currentMoney -= itemPrice;
+                gm.currentMoney -= objectToBuy.GetComponent<Inventory>().itemPrice;
+                gm.cv.inventoryList.Add(Instantiate(objectToBuy));
+                Destroy(gm.cv.inventoryList.LastOrDefault().GetComponent<ShopItem>());
+                gm.cv.inventoryList.LastOrDefault().transform.SetParent(gm.inventoryList.transform);
             }
             else
             {
@@ -135,6 +134,25 @@ public class ShopManager : MonoBehaviour
         {
             gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Not enough garbage!";
         }
+    }
+
+    Type ItemSlotCheck(int itemID)
+    {
+        //check itemID from database
+
+        if (itemID == 10)
+        {
+            return typeof(Weapon);
+        }
+        else if (itemID == 20)
+        {
+            return typeof(Armor);
+        }
+        else if (itemID == 30)
+        {
+            return typeof(Item);
+        }
+        else return null;
     }
 
     void OnTriggerEnter2D(Collider2D collision)

@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 
-public class Weapon : ShopItem
+public class Weapon : Inventory
 {
     public ScriptWeapon source;
     
