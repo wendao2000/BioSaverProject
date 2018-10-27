@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     [HideInInspector] public ButtonManager bm;
     [HideInInspector] public CharacterMovement ch;
     [HideInInspector] public CharacterInteraction ci;
@@ -36,17 +39,15 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        bm = FindObjectOfType<ButtonManager>();
-        ch = FindObjectOfType<CharacterMovement>();
-        ci = FindObjectOfType<CharacterInteraction>();
-        cv = FindObjectOfType<CharacterInventory>();
-        
-        startPos = new Vector2(
-            PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", -8f) : -8f,
-            PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", 3f) : 3f
-            );
-        ch.transform.position = startPos;
-        currentMoney = PlayerPrefs.HasKey("playerMoney") ? PlayerPrefs.GetInt("playerMoney", defaultMoney) : defaultMoney;
+        if (!instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(instance);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Update()
@@ -76,5 +77,35 @@ public class GameManager : MonoBehaviour
     public void Save()
     {
         PlayerPrefs.SetInt("playerMoney", currentMoney);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        bm = FindObjectOfType<ButtonManager>();
+        ch = FindObjectOfType<CharacterMovement>();
+        ci = FindObjectOfType<CharacterInteraction>();
+        cv = FindObjectOfType<CharacterInventory>();
+
+        startPos = new Vector2(
+            PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", -8f) : -8f,
+            PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", -3f) : -3f
+            );
+        ch.transform.position = startPos;
+        currentMoney = PlayerPrefs.HasKey("playerMoney") ? PlayerPrefs.GetInt("playerMoney", defaultMoney) : defaultMoney;
+    }
+
+    public static GameManager GetInstance()
+    {
+        return instance;
+    }
+
+    public void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteAll();
     }
 }

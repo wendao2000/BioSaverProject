@@ -16,29 +16,35 @@ public class ShopManager : MonoBehaviour
 
     List<GameObject> shopList = new List<GameObject>();
 
-    void Awake()
-    {
-        gm = FindObjectOfType<GameManager>();
-    }
-
     void Start()
     {
-        GenerateShopContent();
+        gm = GameManager.GetInstance();
     }
 
     void Update()
     {
-        if (gm.shop.activeSelf && CrossPlatformInputManager.GetButtonDown("Cancel"))
-        {
-            gm.Shop();
-        }
-
         if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
         {
             if (!gm.ci.interacting || gm.shop.activeSelf)
             {
+                if (!gm.ci.interacting)
+                {
+                    GenerateShopContent();
+                }
+                else
+                {
+                    DestroyShopContent();
+                }
+
                 gm.Shop();
             }
+        }
+
+        //force close shop using Escape button
+        if (gm.shop.activeSelf && CrossPlatformInputManager.GetButtonDown("Cancel"))
+        {
+            gm.Shop();
+            DestroyShopContent();
         }
     }
 
@@ -68,9 +74,18 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    public void DestroyShopContent()
+    {
+        for (int i = 0; i < gm.shopContentPanel.transform.childCount; i++)
+        {
+            Destroy(gm.shopContentPanel.transform.GetChild(i).gameObject);
+        }
+        shopList.Clear();
+    }
+
     public IEnumerator Buy(GameObject objectToBuy)
     {
-        FirstState();
+        BuyConfirmation();
 
         while (!gm.bm.pressed)
         {
@@ -79,11 +94,9 @@ public class ShopManager : MonoBehaviour
 
         if (gm.bm.confirmed)
         {
-            SecondState();
-
             if (gm.currentMoney >= objectToBuy.GetComponent<Inventory>().itemPrice)
             {
-                FinalState(true);
+                BuyNotification(true);
                 gm.currentMoney -= objectToBuy.GetComponent<Inventory>().itemPrice;
                 gm.cv.inventoryList.Add(Instantiate(objectToBuy));
                 Destroy(gm.cv.inventoryList.LastOrDefault().GetComponent<ShopItem>());
@@ -91,7 +104,7 @@ public class ShopManager : MonoBehaviour
             }
             else
             {
-                FinalState(false);
+                BuyNotification(false);
             }
 
             while (!gm.bm.pressed)
@@ -103,7 +116,7 @@ public class ShopManager : MonoBehaviour
         gm.confirmationPanel.SetActive(false);
     }
 
-    void FirstState()
+    void BuyConfirmation()
     {
         //reset state of button and confirmation text
         gm.bm.pressed = false;
@@ -114,17 +127,14 @@ public class ShopManager : MonoBehaviour
         gm.confirmationPanel.transform.Find("ButtonConfirm").gameObject.SetActive(false);
     }
 
-    void SecondState()
+    void BuyNotification(bool value)
     {
         //reset state of button again
         gm.bm.pressed = false;
         gm.confirmationPanel.transform.Find("ButtonYes").gameObject.SetActive(false);
         gm.confirmationPanel.transform.Find("ButtonNo").gameObject.SetActive(false);
         gm.confirmationPanel.transform.Find("ButtonConfirm").gameObject.SetActive(true);
-    }
 
-    void FinalState(bool value)
-    {
         if (value == true)
         {
             gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Purchase Successful!";
@@ -136,6 +146,7 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    #region PROTOTYPE -- NEED DATABASE TO CONTINUE
     Type ItemSlotCheck(int itemID)
     {
         //check itemID from database
@@ -154,6 +165,7 @@ public class ShopManager : MonoBehaviour
         }
         else return null;
     }
+    #endregion
 
     void OnTriggerEnter2D(Collider2D collision)
     {

@@ -3,15 +3,15 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class CharacterInteraction : MonoBehaviour
 {
-    GameManager gm;
+    public GameManager gm;
 
     //[HideInInspector]
     public bool interacting = false;
     //[HideInInspector]
 
-    void Awake()
+    void Start()
     {
-        gm = FindObjectOfType<GameManager>();
+        gm = GameManager.GetInstance();
     }
 
     void Update()
