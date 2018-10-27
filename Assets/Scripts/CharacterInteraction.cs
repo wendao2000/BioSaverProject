@@ -1,24 +1,33 @@
 ﻿using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class CharacterInteraction : MonoBehaviour {
-
+public class CharacterInteraction : MonoBehaviour
+{
     GameManager gm;
-    CharacterMovement ch;
-    Inventory iv;
 
+    //[HideInInspector]
+    public bool interacting = false;
+    //[HideInInspector]
     public int currentMoney = 0;
 
-    void Awake () {
+    void Awake()
+    {
         gm = FindObjectOfType<GameManager>();
-        ch = GetComponent<CharacterMovement>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (CrossPlatformInputManager.GetButtonDown("Inventory")) {
+
+    void Update()
+    {
+        if (gm.inventory.activeSelf && CrossPlatformInputManager.GetButtonDown("Cancel"))
+        {
             gm.Inventory();
-            ch.paralyzed = !ch.paralyzed;
         }
-	}
+
+        if (CrossPlatformInputManager.GetButtonDown("Inventory"))
+        {
+            if (!interacting || gm.inventory.activeSelf)
+            {
+                gm.Inventory();
+            }
+        }
+    }
 }

@@ -1,8 +1,7 @@
-﻿using UnityEngine;
+﻿using UnityEngine.UI;
 
 public class Weapon : ShopItem
 {
-
     public ScriptWeapon source;
     
     public int minAtk;
@@ -23,5 +22,7 @@ public class Weapon : ShopItem
         critChance = source.critChance;
         critMultiplier = source.critMultiplier;
         maxDurability = source.maxDurability;
+
+        GetComponent<Image>().sprite = itemSprite;
     }
 }

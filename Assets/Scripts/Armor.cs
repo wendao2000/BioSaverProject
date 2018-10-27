@@ -1,8 +1,7 @@
-﻿using UnityEngine;
+﻿using UnityEngine.UI;
 
 public class Armor : ShopItem
 {
-
     public ScriptArmor source;
 
     public int armorValue;
@@ -17,5 +16,7 @@ public class Armor : ShopItem
         itemPrice = source.itemPrice;
         armorValue = source.armorValue;
         maxDurability = source.maxDurability;
+
+        GetComponent<Image>().sprite = itemSprite;
     }
 }

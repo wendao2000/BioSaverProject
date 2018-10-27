@@ -10,13 +10,15 @@ public class CharacterMovement : MonoBehaviour
     public float moveSpeed;
     float direction;
 
+
+
     //Jump
     public float jumpVelocity;
     [SerializeField] float fallMultiplier = 2.5f;
     [SerializeField] float lowJumpMultiplier = 2f;
 
     //general
-    [HideInInspector]
+    //[HideInInspector]
     public bool paralyzed = false;
 
     void Awake()

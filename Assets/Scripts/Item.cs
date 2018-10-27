@@ -1,8 +1,7 @@
-﻿using UnityEngine;
+﻿using UnityEngine.UI;
 
 public class Item : ShopItem
 {
-
     public ScriptItem source;
     
     public ItemCategory itemCategory;
@@ -17,5 +16,7 @@ public class Item : ShopItem
         itemPrice = source.itemPrice;
         itemCategory = source.itemCategory;
         value = source.value;
+
+        GetComponent<Image>().sprite = itemSprite;
     }
 }

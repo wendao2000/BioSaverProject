@@ -1,22 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using TMPro;
-using System.Collections;
 
 public class ShopManager : MonoBehaviour
 {
-
-    CharacterMovement ch;
-    CharacterInteraction ci;
     GameManager gm;
-    CharacterInventory cv;
-
-    public GameObject shopContentPanel;
-    public GameObject confirmationPanel;
 
     bool collide = false;
-    bool buyConfirm = false;
 
     public ShopContent shopContent;
 
@@ -25,10 +17,7 @@ public class ShopManager : MonoBehaviour
 
     void Awake()
     {
-        ch = FindObjectOfType<CharacterMovement>();
-        ci = FindObjectOfType<CharacterInteraction>();
         gm = FindObjectOfType<GameManager>();
-        cv = FindObjectOfType<CharacterInventory>();
     }
 
     void Start()
@@ -38,10 +27,17 @@ public class ShopManager : MonoBehaviour
 
     void Update()
     {
+        if (gm.shop.activeSelf && CrossPlatformInputManager.GetButtonDown("Cancel"))
+        {
+            gm.Shop();
+        }
+
         if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
         {
-            ch.paralyzed = !ch.paralyzed;
-            gm.Shop();
+            if (!gm.ci.interacting || gm.shop.activeSelf)
+            {
+                gm.Shop();
+            }
         }
     }
 
@@ -55,21 +51,21 @@ public class ShopManager : MonoBehaviour
         {
             for (int i = 0; i < shopContent.weapon.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + itemCount.ToString()));
+                shopList.Add(new GameObject("Item " + (itemCount + 1).ToString() + ": " + shopContent.weapon[i].weapon.itemName));
                 shopList[itemCount].AddComponent<Weapon>().source = shopContent.weapon[i].weapon;
                 itemCount++;
             }
 
             for (int i = 0; i < shopContent.armor.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + itemCount.ToString()));
+                shopList.Add(new GameObject("Item " + (itemCount + 1).ToString() + ": " + shopContent.armor[i].armor.itemName));
                 shopList[itemCount].AddComponent<Armor>().source = shopContent.armor[i].armor;
                 itemCount++;
             }
 
             for (int i = 0; i < shopContent.item.Length; i++)
             {
-                shopList.Add(new GameObject("Item " + itemCount.ToString()));
+                shopList.Add(new GameObject("Item " + (itemCount + 1).ToString() + ": " + shopContent.item[i].item.itemName));
                 shopList[itemCount].AddComponent<Item>().source = shopContent.item[i].item;
                 itemCount++;
             }
@@ -78,35 +74,67 @@ public class ShopManager : MonoBehaviour
 
     public IEnumerator Buy(int itemID, int itemPrice)
     {
-        //reset confirmation text
-        confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Are you sure about this?";
-        confirmationPanel.SetActive(true);
+        FirstState();
 
-        while (confirmationPanel.activeSelf)
+        while (!gm.bm.pressed)
         {
             yield return null;
         }
 
-        if (buyConfirm)
+        if (gm.bm.confirmed)
         {
-            //if got enough money
-            if (ci.currentMoney >= itemPrice)
+            SecondState();
+
+            if (gm.ci.currentMoney >= itemPrice)
             {
-                ci.currentMoney -= itemPrice;
-                ci.
+                FinalState(true);
+                gm.ci.currentMoney -= itemPrice;
+            }
+            else
+            {
+                FinalState(false);
+            }
+
+            while (!gm.bm.pressed)
+            {
+                yield return null;
             }
         }
+
+        gm.confirmationPanel.SetActive(false);
     }
 
-    public void Confirm(bool value)
+    void FirstState()
+    {
+        //reset state of button and confirmation text
+        gm.bm.pressed = false;
+        gm.confirmationPanel.SetActive(true);
+        gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Are you sure about this?";
+        gm.confirmationPanel.transform.Find("ButtonYes").gameObject.SetActive(true);
+        gm.confirmationPanel.transform.Find("ButtonNo").gameObject.SetActive(true);
+        gm.confirmationPanel.transform.Find("ButtonConfirm").gameObject.SetActive(false);
+    }
+
+    void SecondState()
+    {
+        //reset state of button again
+        gm.bm.pressed = false;
+        gm.confirmationPanel.transform.Find("ButtonYes").gameObject.SetActive(false);
+        gm.confirmationPanel.transform.Find("ButtonNo").gameObject.SetActive(false);
+        gm.confirmationPanel.transform.Find("ButtonConfirm").gameObject.SetActive(true);
+    }
+
+    void FinalState(bool value)
     {
         if (value == true)
         {
-            buyConfirm = true;
+            gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Purchase Successful!";
         }
 
-        else buyConfirm = false;
-        confirmationPanel.SetActive(false);
+        else
+        {
+            gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Not enough garbage!";
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)

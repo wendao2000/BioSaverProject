@@ -3,10 +3,12 @@
 public class BattleManager : MonoBehaviour {
 
     //Equipment eq;
+    GameManager gm;
 
     void Awake()
     {
         //eq = FindObjectOfType<Equipment>();
+        gm = FindObjectOfType<GameManager>();
     }
 
     void Update()

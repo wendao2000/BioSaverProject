@@ -13,7 +13,6 @@ public class ShopContent
 [RequireComponent(typeof(RectTransform), typeof(Image), typeof(Button))]
 public class ShopItem : MonoBehaviour
 {
-
     public int itemID;
     public string itemName;
     public Sprite itemSprite;
@@ -29,7 +28,9 @@ public class ShopItem : MonoBehaviour
     {
         GetComponent<Button>().navigation = nv;
         GetComponent<Button>().onClick.AddListener(delegate { StartCoroutine(FindObjectOfType<ShopManager>().Buy(itemID, itemPrice)); });
-        transform.SetParent(FindObjectOfType<ShopManager>().shopContentPanel.transform);
+
+        transform.SetParent(FindObjectOfType<GameManager>().shopContentPanel.transform);
+
         GetComponent<RectTransform>().localScale = Vector3.one;
     }
 }
