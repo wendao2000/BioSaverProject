@@ -25,7 +25,7 @@ public class CharacterMovement : MonoBehaviour
     public bool grounded = true;
 
     public LayerMask groundLayer;//the layer on which we can be grounded
-    [SerializeField] float radius;
+    public float radius;
 
     void Awake()
     {
@@ -52,9 +52,13 @@ public class CharacterMovement : MonoBehaviour
         if (paralyzed)
         {
             rb.velocity = Vector2.zero;
+            rb.gravityScale = 0f;
         }
         else
         {
+            //return value of gravityScale
+            rb.gravityScale = 1f;
+
             //horizontal direction movement a.k.a. running
             rb.velocity = new Vector2(directionX * moveSpeed, rb.velocity.y);
 
@@ -89,6 +93,8 @@ public class CharacterMovement : MonoBehaviour
             if (directionY < 0)
             {
                 collision.gameObject.GetComponent<Collider2D>().enabled = false;
+                
+                Debug.Log("Fall");
             }
         }
     }

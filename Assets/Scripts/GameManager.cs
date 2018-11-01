@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.CrossPlatformInput;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,13 +10,14 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public ButtonManager bm;
     [HideInInspector] public CharacterMovement ch;
-    [HideInInspector] public CharacterInteraction ci;
     [HideInInspector] public CharacterInventory cv;
+    [HideInInspector] public ShopManager sm;
 
     [Header("Canvas References")]
     //redirect to canvas
     public GameObject shop;
     public GameObject inventory;
+    public GameObject characterInformation;
     public TextMeshProUGUI moneyText;
 
     [Header("Merchant References")]
@@ -24,18 +26,20 @@ public class GameManager : MonoBehaviour
     public GameObject confirmationPanel;
     //item goes here
     public GameObject inventoryList;
-
-    //Character Start Position based on last exit scene
-    //[HideInInspector]
-    public Vector2 startPos;
-
+    
     [Header("Player's Inventory")]
     public int defaultMoney = 500;
     public int currentMoney = 0;
 
+    [Header("Character's Interaction")]
+    public bool interacting = false;
+
     [Header("General")]
     //redirect to virtual interaction button
     public Button interactionButton;
+
+    //Character Start Position based on last exit scene
+    [HideInInspector] public Vector2 startPos;
 
     void Awake()
     {
@@ -53,19 +57,64 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         moneyText.text = currentMoney.ToString();
+
+        #region CHARACTER INTERACTION
+        if (CrossPlatformInputManager.GetButtonDown("Cancel"))
+        {
+
+            if (shop.activeSelf)
+            {
+                sm.DestroyShopContent();
+                Shop();
+            }
+
+            if (characterInformation.activeSelf)
+            {
+                CharacterInformation();
+            }
+
+            if (inventory.activeSelf)
+            {
+                Inventory();
+            }
+        }
+
+        if (CrossPlatformInputManager.GetButtonDown("CharacterInformation"))
+        {
+            if (!interacting || characterInformation.activeSelf)
+            {
+                CharacterInformation();
+            }
+        }
+
+        if (CrossPlatformInputManager.GetButtonDown("Inventory"))
+        {
+            if (!interacting || inventory.activeSelf)
+            {
+                Inventory();
+            }
+        }
+        #endregion
     }
 
     public void Shop()
     {
         ch.paralyzed = !ch.paralyzed;
-        ci.interacting = !ci.interacting;
+        interacting = !interacting;
         shop.SetActive(!shop.activeSelf);
+    }
+
+    public void CharacterInformation()
+    {
+        ch.paralyzed = !ch.paralyzed;
+        interacting = !interacting;
+        characterInformation.SetActive(!characterInformation.activeSelf);
     }
 
     public void Inventory()
     {
         ch.paralyzed = !ch.paralyzed;
-        ci.interacting = !ci.interacting;
+        interacting = !interacting;
         inventory.SetActive(!inventory.activeSelf);
     }
 
@@ -88,8 +137,8 @@ public class GameManager : MonoBehaviour
     {
         bm = FindObjectOfType<ButtonManager>();
         ch = FindObjectOfType<CharacterMovement>();
-        ci = FindObjectOfType<CharacterInteraction>();
         cv = FindObjectOfType<CharacterInventory>();
+        sm = FindObjectOfType<ShopManager>();
 
         startPos = new Vector2(
             PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", -8f) : -8f,

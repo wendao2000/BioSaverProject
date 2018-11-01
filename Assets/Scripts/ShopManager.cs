@@ -25,9 +25,9 @@ public class ShopManager : MonoBehaviour
     {
         if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
         {
-            if (!gm.ci.interacting || gm.shop.activeSelf)
+            if (!gm.interacting || gm.shop.activeSelf)
             {
-                if (!gm.ci.interacting)
+                if (!gm.interacting)
                 {
                     GenerateShopContent();
                 }
@@ -38,13 +38,6 @@ public class ShopManager : MonoBehaviour
 
                 gm.Shop();
             }
-        }
-
-        //force close shop using Escape button
-        if (gm.shop.activeSelf && CrossPlatformInputManager.GetButtonDown("Cancel"))
-        {
-            gm.Shop();
-            DestroyShopContent();
         }
     }
 
@@ -72,6 +65,8 @@ public class ShopManager : MonoBehaviour
                 shopList.LastOrDefault().AddComponent<Item>().source = shopContent.item[i].item;
             }
         }
+
+        Debug.Log("Shop Content Generated");
     }
 
     public void DestroyShopContent()
@@ -81,6 +76,8 @@ public class ShopManager : MonoBehaviour
             Destroy(gm.shopContentPanel.transform.GetChild(i).gameObject);
         }
         shopList.Clear();
+        
+        Debug.Log("Shop Content Destroyed");
     }
 
     public IEnumerator Buy(GameObject objectToBuy)
@@ -146,7 +143,7 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    #region PROTOTYPE -- NEED DATABASE TO CONTINUE
+    #region PROTOTYPE -- NEED DATABASE TO CONTINUE THIS PART OF CODE
     Type ItemSlotCheck(int itemID)
     {
         //check itemID from database
@@ -173,6 +170,8 @@ public class ShopManager : MonoBehaviour
         {
             collide = true;
             //gm.UpdateInteraction("Shop");
+            
+            Debug.Log("Enter Shop");
         }
     }
 
@@ -182,6 +181,8 @@ public class ShopManager : MonoBehaviour
         {
             collide = false;
             //gm.UpdateInteraction("Normal");
+            
+            Debug.Log("Exit Shop");
         }
     }
 }

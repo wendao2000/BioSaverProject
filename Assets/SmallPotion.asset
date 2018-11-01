@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 20
   itemName: Small Potion
-  itemSprite: {fileID: 21300000, guid: 3316cc3150e02fb4197a7d1c0074005d, type: 3}
+  itemSprite: {fileID: 21300000, guid: 49bb75065203f4044b6dbf8e798e42cd, type: 3}
   itemPrice: 5
   itemSlot: 0
   itemCategory: 0
