@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
     public bool interacting = false;
 
     [Header("General")]
-    //redirect to virtual interaction button
-    public Button interactionButton;
+    public bool battleMode = false;
+    public Button interactionButton; //redirect to virtual interaction button
 
     //Character Start Position based on last exit scene
     [HideInInspector] public Vector2 startPos;
@@ -144,7 +144,11 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", -8f) : -8f,
             PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", -3f) : -3f
             );
-        ch.transform.position = startPos;
+
+        if (!battleMode)
+        {
+            ch.transform.position = startPos;
+        }
         currentMoney = PlayerPrefs.HasKey("playerMoney") ? PlayerPrefs.GetInt("playerMoney", defaultMoney) : defaultMoney;
     }
 
