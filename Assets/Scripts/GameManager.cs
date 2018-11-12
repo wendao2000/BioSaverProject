@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    [HideInInspector] public ButtonManager bm;
+    [HideInInspector] public BattleManager bm;
+    [HideInInspector] public ButtonManager bt;
     [HideInInspector] public CharacterMovement ch;
     [HideInInspector] public CharacterInventory cv;
     [HideInInspector] public ShopManager sm;
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject shop;
     public GameObject inventory;
     public GameObject characterInformation;
+    public GameObject battleMode;
     public TextMeshProUGUI moneyText;
 
     [Header("Merchant References")]
@@ -26,7 +28,11 @@ public class GameManager : MonoBehaviour
     public GameObject confirmationPanel;
     //item goes here
     public GameObject inventoryList;
-    
+
+    [Header("Battle References")]
+    public GameObject firstPanel;
+    public GameObject secondPanel;
+
     [Header("Player's Inventory")]
     public int defaultMoney = 500;
     public int currentMoney = 0;
@@ -35,7 +41,7 @@ public class GameManager : MonoBehaviour
     public bool interacting = false;
 
     [Header("General")]
-    public bool battleMode = false;
+    public bool inBattle = false;
     public Button interactionButton; //redirect to virtual interaction button
 
     //Character Start Position based on last exit scene
@@ -58,7 +64,7 @@ public class GameManager : MonoBehaviour
     {
         moneyText.text = currentMoney.ToString();
 
-        #region CHARACTER INTERACTION
+        #region Character Interaction
         if (CrossPlatformInputManager.GetButtonDown("Cancel"))
         {
 
@@ -97,6 +103,8 @@ public class GameManager : MonoBehaviour
         #endregion
     }
 
+    #region UI Interaction
+
     public void Shop()
     {
         ch.paralyzed = !ch.paralyzed;
@@ -123,6 +131,25 @@ public class GameManager : MonoBehaviour
         //update image of interact button
     }
 
+    #endregion
+
+    public void EnterBattle(int[] index)
+    {
+        //get index from enemies that character interact to and
+        //throw it to BattleManager to be generated.
+        PlayerPrefs.SetInt("lastScene", SceneManager.GetActiveScene().buildIndex);
+        PlayerPrefs.SetFloat("startPos.X", ch.transform.position.x);
+        PlayerPrefs.SetFloat("startPos.Y", ch.transform.position.y);
+        battleMode.SetActive(true);
+        SceneManager.LoadScene("battleScene");
+    }
+
+    public void ExitBattle()
+    {
+        battleMode.SetActive(false);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("lastScene"));
+    }
+
     public void Save()
     {
         PlayerPrefs.SetInt("playerMoney", currentMoney);
@@ -135,7 +162,8 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        bm = FindObjectOfType<ButtonManager>();
+        bt = FindObjectOfType<ButtonManager>();
+        bm = FindObjectOfType<BattleManager>();
         ch = FindObjectOfType<CharacterMovement>();
         cv = FindObjectOfType<CharacterInventory>();
         sm = FindObjectOfType<ShopManager>();
@@ -145,7 +173,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", -3f) : -3f
             );
 
-        if (!battleMode)
+        if (!inBattle)
         {
             ch.transform.position = startPos;
         }

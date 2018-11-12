@@ -33,6 +33,32 @@ public class ButtonManager : MonoBehaviour {
         }
     }
 
+    #region BattleMode
+    
+    public void Attack()
+    {
+        Debug.Log("Attack");
+    }
+
+    public void Magic()
+    {
+        Debug.Log("Magic");
+        FindObjectOfType<BattleManager>().Magic();
+    }
+
+    public void UseItem()
+    {
+        Debug.Log("Use Item");
+    }
+
+    public void Flee()
+    {
+        Debug.Log("Flee");
+        FindObjectOfType<BattleManager>().Flee();
+    }
+
+    #endregion
+
     public void ButtonPress()
     {
         pressed = true;

@@ -84,12 +84,12 @@ public class ShopManager : MonoBehaviour
     {
         BuyConfirmation();
 
-        while (!gm.bm.pressed)
+        while (!gm.bt.pressed)
         {
             yield return null;
         }
 
-        if (gm.bm.confirmed)
+        if (gm.bt.confirmed)
         {
             if (gm.currentMoney >= objectToBuy.GetComponent<Inventory>().itemPrice)
             {
@@ -104,7 +104,7 @@ public class ShopManager : MonoBehaviour
                 BuyNotification(false);
             }
 
-            while (!gm.bm.pressed)
+            while (!gm.bt.pressed)
             {
                 yield return null;
             }
@@ -116,7 +116,7 @@ public class ShopManager : MonoBehaviour
     void BuyConfirmation()
     {
         //reset state of button and confirmation text
-        gm.bm.pressed = false;
+        gm.bt.pressed = false;
         gm.confirmationPanel.SetActive(true);
         gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Are you sure about this?";
         gm.confirmationPanel.transform.Find("ButtonYes").gameObject.SetActive(true);
@@ -127,7 +127,7 @@ public class ShopManager : MonoBehaviour
     void BuyNotification(bool value)
     {
         //reset state of button again
-        gm.bm.pressed = false;
+        gm.bt.pressed = false;
         gm.confirmationPanel.transform.Find("ButtonYes").gameObject.SetActive(false);
         gm.confirmationPanel.transform.Find("ButtonNo").gameObject.SetActive(false);
         gm.confirmationPanel.transform.Find("ButtonConfirm").gameObject.SetActive(true);
