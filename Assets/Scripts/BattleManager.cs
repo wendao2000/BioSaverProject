@@ -1,41 +1,73 @@
 ﻿using UnityEngine;
+using TMPro;
 
-public class BattleManager : MonoBehaviour {
+public class BattleManager : MonoBehaviour
+{
 
-    //Equipment eq; //character equipment
-    //GameObject en; //enemies
+    CharacterStatus cs;
     GameManager gm;
+
+    public int enemiesHP;
+    public int enemiesMP;
+    public float enemiesAtk;
+    public float enemiesDef;
+    public float fleeChance;
+    public int enemiesEXPGiven;
+
+    void Awake()
+    {
+        gm = GameManager.GetInstance();
+        cs = FindObjectOfType<CharacterStatus>();
+    }
 
     void Start()
     {
-        //eq = FindObjectOfType<Equipment>();
-        gm = GameManager.GetInstance();
+        GenerateEnemies(PlayerPrefs.GetInt("EnemiesID"));
     }
 
     void Update()
     {
-        //en.healthPoint -= CalculateDamage();
+        GameObject.Find("EnemiesHP").GetComponent<TextMeshProUGUI>().text = "Enemies HP: " + enemiesHP;
+        if (enemiesHP <= 0)
+        {
+            
+
+            Debug.Log("Enemies Defeated!");
+            Debug.Log("Gained " + enemiesEXPGiven + " Experience Points");
+        }
     }
 
-    public void GenerateEnemies(int[] index)
+    private void GenerateEnemies(int index)
     {
-        //get index and Generate Enemies
+        
     }
 
     public void Attack()
     {
-        //gm.secondPanel.SetActive(true);
+        int playerAtk = CalculateDamage();
+        int damageGiven = Mathf.FloorToInt((playerAtk * playerAtk) / (playerAtk + enemiesDef));
+        GameObject.Find("DamageGiven").GetComponent<TextMeshProUGUI>().text = "Damage Given: " + Mathf.FloorToInt(damageGiven);
+        enemiesHP = Mathf.Clamp(enemiesHP - damageGiven, 0, enemiesHP);
     }
 
     public void Magic()
     {
-        gm.secondPanel.SetActive(true);
+        if (gm.itemPanel.activeSelf)
+            {
+                gm.itemPanel.SetActive(false);
+            }
 
+        gm.magicPanel.SetActive(true);
     }
 
     public void UseItem()
     {
-        //gm.secondPanel.SetActive(true);
+        if (gm.magicPanel.activeSelf)
+            {
+                gm.magicPanel.SetActive(false);
+            }
+
+        gm.itemPanel.SetActive(true);
     }
 
     public void Flee()
@@ -44,12 +76,13 @@ public class BattleManager : MonoBehaviour {
         gm.ExitBattle();
     }
 
-    //float CalculateDamage()
-    //{
-    //bool crit = Random.Range(0, 100) > critChance ? true : false;
-    //float damage = Random.Range(eq.minAtk, eq.maxAtk);
-    //damage = crit ? damage * eq.critMultiplier : damage;
-
-    //return damage;
-    //}
+    int CalculateDamage()
+    {
+        bool crit = (cs.critChance > Random.Range(0, 100)) ? true : false;
+        float damage = Random.Range(cs.minAtk, cs.maxAtk);
+        damage = crit ? damage * cs.critMultiplier : damage;
+        GameObject.Find("PlayerAttack").GetComponent<TextMeshProUGUI>().text = "Player Attack: " + Mathf.FloorToInt(damage);
+        GameObject.Find("Critical").GetComponent<TextMeshProUGUI>().text = crit ? "Critical!" : "";
+        return Mathf.FloorToInt(damage);
+    }
 }

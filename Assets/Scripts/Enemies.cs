@@ -5,11 +5,13 @@ public class Enemies : MonoBehaviour {
 
     bool collide = false;
 
+    public int enemyID;
+
     void Update()
     {
         if(collide && CrossPlatformInputManager.GetButtonDown("Interact"))
         {
-            FindObjectOfType<GameManager>().EnterBattle(new int[] {0});
+            FindObjectOfType<GameManager>().EnterBattle(enemyID);
         }
     }
 

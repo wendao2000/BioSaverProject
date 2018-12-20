@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 
-public class ButtonManager : MonoBehaviour {
+public class ButtonManager : MonoBehaviour
+{
 
     public static ButtonManager instance;
+
+    GameManager gm;
+    BattleManager bm;
 
     public bool confirmed = false;
     public bool pressed = false;
@@ -20,6 +24,12 @@ public class ButtonManager : MonoBehaviour {
         }
     }
 
+    void Start()
+    {
+        gm = GameManager.GetInstance();
+        bm = FindObjectOfType<BattleManager>();
+    }
+
     public void Confirm(bool value)
     {
         if (value == true)
@@ -34,26 +44,36 @@ public class ButtonManager : MonoBehaviour {
     }
 
     #region BattleMode
-    
+
     public void Attack()
     {
-        Debug.Log("Attack");
+        if (gm.magicPanel.activeSelf || gm.itemPanel.activeSelf)
+        {
+            if (gm.magicPanel.activeSelf)
+            {
+                gm.magicPanel.SetActive(false);
+            }
+            else if (gm.itemPanel.activeSelf)
+            {
+                gm.itemPanel.SetActive(false);
+            }
+        }
+        
+        bm.Attack();
     }
 
     public void Magic()
     {
-        Debug.Log("Magic");
         FindObjectOfType<BattleManager>().Magic();
     }
 
     public void UseItem()
     {
-        Debug.Log("Use Item");
+        FindObjectOfType<BattleManager>().UseItem();
     }
 
     public void Flee()
     {
-        Debug.Log("Flee");
         FindObjectOfType<BattleManager>().Flee();
     }
 

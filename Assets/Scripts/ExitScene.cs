@@ -95,7 +95,13 @@ public class ExitScene : MonoBehaviour
         if (collision.tag == "Player")
         {
             collide = true;
+
             //gm.UpdateInteraction("ExitScene");
+
+            /*if (enabled)
+                {
+                    Debug.Log("Entering " + gameObject.name);
+                }*/
         }
     }
 
@@ -104,7 +110,13 @@ public class ExitScene : MonoBehaviour
         if (collision.tag == "Player")
         {
             collide = false;
+
             //gm.UpdateInteraction("Normal");
+
+            /*if (enabled)
+                {
+                    Debug.Log("Exiting " + gameObject.name);
+                }*/
         }
     }
 }

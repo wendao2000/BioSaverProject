@@ -30,8 +30,9 @@ public class GameManager : MonoBehaviour
     public GameObject inventoryList;
 
     [Header("Battle References")]
-    public GameObject firstPanel;
-    public GameObject secondPanel;
+    public GameObject mainPanel;
+    public GameObject magicPanel;
+    public GameObject itemPanel;
 
     [Header("Player's Inventory")]
     public int defaultMoney = 500;
@@ -67,21 +68,33 @@ public class GameManager : MonoBehaviour
         #region Character Interaction
         if (CrossPlatformInputManager.GetButtonDown("Cancel"))
         {
-
-            if (shop.activeSelf)
+            if (interacting)
             {
-                sm.DestroyShopContent();
-                Shop();
+                if (shop.activeSelf)
+                {
+                    sm.DestroyShopContent();
+                    Shop();
+                }
+
+                if (characterInformation.activeSelf)
+                {
+                    CharacterInformation();
+                }
+
+                if (inventory.activeSelf)
+                {
+                    Inventory();
+                }
+
+                //if (pauseMenu.activeSelf)
+                //{
+                //    PauseMenu();
+                //}
             }
 
-            if (characterInformation.activeSelf)
+            else
             {
-                CharacterInformation();
-            }
-
-            if (inventory.activeSelf)
-            {
-                Inventory();
+                //PauseMenu();
             }
         }
 
@@ -107,6 +120,15 @@ public class GameManager : MonoBehaviour
 
     public void Shop()
     {
+        if (!shop.activeSelf)
+        {
+            sm.GenerateShopContent();
+        }
+        else
+        {
+            sm.DestroyShopContent();
+        }
+
         ch.paralyzed = !ch.paralyzed;
         interacting = !interacting;
         shop.SetActive(!shop.activeSelf);
@@ -133,10 +155,9 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    public void EnterBattle(int[] index)
+    public void EnterBattle(int index)
     {
-        //get index from enemies that character interact to and
-        //throw it to BattleManager to be generated.
+        PlayerPrefs.SetInt("EnemiesID", index);
         PlayerPrefs.SetInt("lastScene", SceneManager.GetActiveScene().buildIndex);
         PlayerPrefs.SetFloat("startPos.X", ch.transform.position.x);
         PlayerPrefs.SetFloat("startPos.Y", ch.transform.position.y);

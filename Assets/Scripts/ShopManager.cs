@@ -23,17 +23,13 @@ public class ShopManager : MonoBehaviour
 
     void Update()
     {
-        if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
+        if (CrossPlatformInputManager.GetButtonDown("Interact"))
         {
-            if (!gm.interacting || gm.shop.activeSelf)
+            if (collide || gm.shop.activeSelf)
             {
-                if (!gm.interacting)
+                if (gm.confirmationPanel.activeSelf)
                 {
-                    GenerateShopContent();
-                }
-                else
-                {
-                    DestroyShopContent();
+                    gm.confirmationPanel.SetActive(false);
                 }
 
                 gm.Shop();
@@ -76,13 +72,15 @@ public class ShopManager : MonoBehaviour
             Destroy(gm.shopContentPanel.transform.GetChild(i).gameObject);
         }
         shopList.Clear();
-        
+
         Debug.Log("Shop Content Destroyed");
     }
 
     public IEnumerator Buy(GameObject objectToBuy)
     {
-        BuyConfirmation();
+        int itemPrice = objectToBuy.GetComponent<Inventory>().itemPrice;
+
+        BuyConfirmation(itemPrice);
 
         while (!gm.bt.pressed)
         {
@@ -91,10 +89,10 @@ public class ShopManager : MonoBehaviour
 
         if (gm.bt.confirmed)
         {
-            if (gm.currentMoney >= objectToBuy.GetComponent<Inventory>().itemPrice)
+            if (gm.currentMoney >= itemPrice)
             {
                 BuyNotification(true);
-                gm.currentMoney -= objectToBuy.GetComponent<Inventory>().itemPrice;
+                gm.currentMoney -= itemPrice;
                 gm.cv.inventoryList.Add(Instantiate(objectToBuy));
                 Destroy(gm.cv.inventoryList.LastOrDefault().GetComponent<ShopItem>());
                 gm.cv.inventoryList.LastOrDefault().transform.SetParent(gm.inventoryList.transform);
@@ -113,12 +111,12 @@ public class ShopManager : MonoBehaviour
         gm.confirmationPanel.SetActive(false);
     }
 
-    void BuyConfirmation()
+    void BuyConfirmation(int itemPrice)
     {
         //reset state of button and confirmation text
         gm.bt.pressed = false;
         gm.confirmationPanel.SetActive(true);
-        gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Are you sure about this?";
+        gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Price: " + itemPrice + "\nAre you sure about this?";
         gm.confirmationPanel.transform.Find("ButtonYes").gameObject.SetActive(true);
         gm.confirmationPanel.transform.Find("ButtonNo").gameObject.SetActive(true);
         gm.confirmationPanel.transform.Find("ButtonConfirm").gameObject.SetActive(false);
@@ -170,8 +168,6 @@ public class ShopManager : MonoBehaviour
         {
             collide = true;
             //gm.UpdateInteraction("Shop");
-            
-            Debug.Log("Enter Shop");
         }
     }
 
@@ -181,8 +177,6 @@ public class ShopManager : MonoBehaviour
         {
             collide = false;
             //gm.UpdateInteraction("Normal");
-            
-            Debug.Log("Exit Shop");
         }
     }
 }
