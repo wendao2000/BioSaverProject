@@ -5,13 +5,17 @@ public class Enemies : MonoBehaviour {
 
     bool collide = false;
 
-    public int enemyID;
+    public int ID;
+    public int HP, MP;
+    public float ATK, DEF;
+    public float FLEE;
+    public int EXP;
 
     void Update()
     {
         if(collide && CrossPlatformInputManager.GetButtonDown("Interact"))
         {
-            FindObjectOfType<GameManager>().EnterBattle(enemyID);
+            FindObjectOfType<GameManager>().EnterBattle(ID);
         }
     }
 
@@ -20,7 +24,7 @@ public class Enemies : MonoBehaviour {
         if (collision.tag == "Player")
         {
             collide = true;
-            //gm.UpdateInteraction("Shop");
+            //gm.UpdateInteraction("Fight");
 
             Debug.Log("Enter Enemies");
         }

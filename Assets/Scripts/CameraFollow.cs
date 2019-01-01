@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
 public class CameraFollow : MonoBehaviour {
-
-    GameManager gm;
+    
     Transform ch;
 
     Vector3 velo = Vector3.zero;
@@ -17,7 +16,6 @@ public class CameraFollow : MonoBehaviour {
 
     void Awake()
     {
-        gm = GameManager.GetInstance();
         ch = GameObject.Find("Character").transform;
         targetPos = ch.position;
     }
