@@ -10,6 +10,8 @@ public class ShopManager : MonoBehaviour
 {
     GameManager gm;
 
+    Transform confirmPanel;
+
     bool collide = false;
 
     public ShopContent shopContent;
@@ -19,6 +21,7 @@ public class ShopManager : MonoBehaviour
     void Start()
     {
         gm = GameManager.GetInstance();
+        confirmPanel = gm.confirmationPanel.transform;
     }
 
     void Update()
@@ -116,28 +119,28 @@ public class ShopManager : MonoBehaviour
         //reset state of button and confirmation text
         gm.bt.pressed = false;
         gm.confirmationPanel.SetActive(true);
-        gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Price: " + itemPrice + "\nAre you sure about this?";
-        gm.confirmationPanel.transform.Find("ButtonYes").gameObject.SetActive(true);
-        gm.confirmationPanel.transform.Find("ButtonNo").gameObject.SetActive(true);
-        gm.confirmationPanel.transform.Find("ButtonConfirm").gameObject.SetActive(false);
+        confirmPanel.Find("Description").GetComponent<TextMeshProUGUI>().text = "Price: " + itemPrice + "\nAre you sure about this?";
+        confirmPanel.Find("ButtonYes").gameObject.SetActive(true);
+        confirmPanel.Find("ButtonNo").gameObject.SetActive(true);
+        confirmPanel.Find("ButtonConfirm").gameObject.SetActive(false);
     }
 
     void BuyNotification(bool value)
     {
         //reset state of button again
         gm.bt.pressed = false;
-        gm.confirmationPanel.transform.Find("ButtonYes").gameObject.SetActive(false);
-        gm.confirmationPanel.transform.Find("ButtonNo").gameObject.SetActive(false);
-        gm.confirmationPanel.transform.Find("ButtonConfirm").gameObject.SetActive(true);
+        confirmPanel.Find("ButtonYes").gameObject.SetActive(false);
+        confirmPanel.Find("ButtonNo").gameObject.SetActive(false);
+        confirmPanel.Find("ButtonConfirm").gameObject.SetActive(true);
 
         if (value == true)
         {
-            gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Purchase Successful!";
+            confirmPanel.Find("Description").GetComponent<TextMeshProUGUI>().text = "Purchase Successful!";
         }
 
         else
         {
-            gm.confirmationPanel.transform.Find("Description").GetComponent<TextMeshProUGUI>().text = "Not enough garbage!";
+            confirmPanel.Find("Description").GetComponent<TextMeshProUGUI>().text = "Not enough garbage!";
         }
     }
 

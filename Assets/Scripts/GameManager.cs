@@ -30,9 +30,8 @@ public class GameManager : MonoBehaviour
     public GameObject inventoryList;
 
     [Header("Battle References")]
-    public GameObject mainPanel;
-    public GameObject magicPanel;
-    public GameObject itemPanel;
+    public Transform mainPanel;
+    public Transform secondPanel;
 
     [Header("Player's Inventory")]
     public int defaultMoney = 500;
@@ -53,11 +52,6 @@ public class GameManager : MonoBehaviour
         if (!instance)
         {
             instance = this;
-            DontDestroyOnLoad(instance);
-        }
-        else
-        {
-            Destroy(gameObject);
         }
     }
 
@@ -190,8 +184,8 @@ public class GameManager : MonoBehaviour
         sm = FindObjectOfType<ShopManager>();
 
         startPos = new Vector2(
-            PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", -8f) : -8f,
-            PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", -3f) : -3f
+            PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", 6f) : 6f,
+            PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", -2f) : -2f
             );
 
         if (!inBattle)

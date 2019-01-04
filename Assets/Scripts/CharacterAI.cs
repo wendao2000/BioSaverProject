@@ -2,11 +2,11 @@
 using UnityEngine;
 using TMPro;
 
-public class EnemiesAI : MonoBehaviour
+public class CharacterAI : MonoBehaviour
 {
     BattleManager bm;
 
-    public enum EnemyState
+    public enum HeroState
     {
         DRAWPHASE,
         MAINPHASE,
@@ -15,7 +15,7 @@ public class EnemiesAI : MonoBehaviour
         DEAD
     }
 
-    public EnemyState currentState;
+    public HeroState currentState;
 
     private float cd, curcd = 0f;
 
@@ -24,27 +24,29 @@ public class EnemiesAI : MonoBehaviour
     void Start()
     {
         bm = FindObjectOfType<BattleManager>();
+        
+        GameObject.Find("Selector").SetActive(false);
 
-        currentState = EnemyState.DRAWPHASE;
+        currentState = HeroState.DRAWPHASE;
     }
 
     void Update()
     {
         switch (currentState)
         {
-            case (EnemyState.DRAWPHASE):
+            case (HeroState.DRAWPHASE):
                 DrawPhase();
                 break;
-            case (EnemyState.MAINPHASE):
-                MainPhase();
+            case (HeroState.MAINPHASE):
+                //wait for input
                 break;
-            case (EnemyState.WAITPHASE):
-                //idle
+            case (HeroState.WAITPHASE):
+                //idle | wait for turn
                 break;
-            case (EnemyState.BATTLEPHASE):
+            case (HeroState.BATTLEPHASE):
                 StartCoroutine(BattlePhase());
                 break;
-            case (EnemyState.DEAD):
+            case (HeroState.DEAD):
                 Debug.Log(name + " is dead");
                 break;
         }
@@ -54,7 +56,7 @@ public class EnemiesAI : MonoBehaviour
     {
         if (cd == 0f)
         {
-            cd = Random.Range(3f, 5f);
+            cd = Random.Range(2f, 3f);
         }
 
         else if (curcd < cd && (bm.heroQueue.Count == 0 && bm.performList.Count == 0))
@@ -65,21 +67,9 @@ public class EnemiesAI : MonoBehaviour
         else if (curcd >= cd)
         {
             cd = curcd = 0f;
-            currentState = EnemyState.MAINPHASE;
+            bm.heroQueue.Add(gameObject);
+            currentState = HeroState.MAINPHASE;
         }
-    }
-
-    void MainPhase()
-    {
-        TurnHandler attack = new TurnHandler
-        {
-            source = gameObject,
-            target = bm.heroList[Random.Range(0, bm.heroList.Count)]
-        };
-
-        bm.SubmitAction(attack);
-
-        currentState = EnemyState.WAITPHASE;
     }
 
     IEnumerator BattlePhase()
@@ -114,7 +104,7 @@ public class EnemiesAI : MonoBehaviour
 
         actionDone = false;
 
-        currentState = EnemyState.DRAWPHASE;
+        currentState = HeroState.DRAWPHASE;
     }
 
     bool Move(Vector3 target)

@@ -3,13 +3,28 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Enemies : MonoBehaviour {
 
-    bool collide = false;
-
+    public ScriptEnemies source;
+    
     public int ID;
     public int HP, MP;
     public float ATK, DEF;
     public float FLEE;
     public int EXP;
+
+    bool collide = false;
+
+    void Start()
+    {
+        name = source.enemiesName;
+        ID = source.enemiesID;
+        HP = source.enemiesHP;
+        MP = source.enemiesMP;
+        ATK = source.enemiesATK;
+        DEF = source.enemiesDEF;
+        FLEE = source.enemiesFLEE;
+        EXP = source.enemiesEXP;
+        //GetComponent<SpriteRenderer>().sprite = source.enemiesSprite;
+    }
 
     void Update()
     {

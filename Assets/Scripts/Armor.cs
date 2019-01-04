@@ -10,7 +10,7 @@ public class Armor : Inventory
     void Start()
     {
         itemID = source.itemID;
-        itemName = source.itemName;
+        name = itemName = source.itemName;
         itemSprite = source.itemSprite;
         itemSlot = source.itemSlot;
         itemPrice = source.itemPrice;
