@@ -16,8 +16,8 @@ MonoBehaviour:
   enemiesName: Banana
   enemiesSprite: {fileID: 21300002, guid: b55ed8644dd07854f909ad92658e0bf6, type: 3}
   animator: {fileID: 9100000, guid: dba6c97777d36f74baa2ec2ddd8049d5, type: 2}
-  enemiesHP: 30
-  enemiesMP: 0
+  enemiesHP: 34
+  enemiesMP: 10
   enemiesATK: 12
   enemiesDEF: 4
   enemiesFLEE: 0

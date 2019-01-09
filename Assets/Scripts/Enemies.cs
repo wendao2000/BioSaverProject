@@ -2,13 +2,15 @@
 using UnityStandardAssets.CrossPlatformInput;
 
 [RequireComponent(typeof(Animator))]
-public class Enemies : MonoBehaviour {
+[RequireComponent(typeof(BoxCollider2D))]
+public class Enemies : MonoBehaviour
+{
 
     public ScriptEnemies source;
-    
-    
+
+
     public int ID;
-    public int HP, MP;
+    public float maxHP, HP, maxMP, MP;
     public float ATK, DEF;
     public float FLEE;
     public int EXP;
@@ -19,8 +21,8 @@ public class Enemies : MonoBehaviour {
     {
         name = source.enemiesName;
         ID = source.enemiesID;
-        HP = source.enemiesHP;
-        MP = source.enemiesMP;
+        maxHP = HP = source.enemiesHP;
+        maxMP = MP = source.enemiesMP;
         ATK = source.enemiesATK;
         DEF = source.enemiesDEF;
         FLEE = source.enemiesFLEE;
@@ -32,9 +34,18 @@ public class Enemies : MonoBehaviour {
 
     void Update()
     {
-        if(collide && CrossPlatformInputManager.GetButtonDown("Interact"))
+        if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
         {
             FindObjectOfType<GameManager>().EnterBattle(ID);
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        FindObjectOfType<StatusManager>().GetEnemies(this);
+        if (!FindObjectOfType<StatusManager>().statusPanel.activeSelf)
+        {
+            FindObjectOfType<ButtonManager>().ToggleStatusPanel();
         }
     }
 

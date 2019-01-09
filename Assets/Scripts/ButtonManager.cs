@@ -5,7 +5,8 @@ public class ButtonManager : MonoBehaviour
 
     public static ButtonManager instance;
 
-    public BattleManager bm;
+    BattleManager bm;
+    StatusManager sm;
 
     public bool confirmed = false;
     public bool pressed = false;
@@ -26,6 +27,11 @@ public class ButtonManager : MonoBehaviour
     void Start()
     {
         bm = FindObjectOfType<BattleManager>();
+
+        if(bm != null)
+        {
+            sm = bm.GetComponent<StatusManager>();
+        }
     }
 
     public void Confirm(bool value)
@@ -61,6 +67,12 @@ public class ButtonManager : MonoBehaviour
     public void Flee()
     {
         bm.Flee();
+    }
+
+    public void ToggleStatusPanel()
+    {
+        sm.statusPanel.SetActive(!sm.statusPanel.activeSelf);
+        sm.toggleButton.SetActive(!sm.toggleButton.activeSelf);
     }
 
     #endregion

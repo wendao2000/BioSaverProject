@@ -8,8 +8,8 @@ public class ScriptEnemies : ScriptableObject
     public string enemiesName = "Enemies";
     public Sprite enemiesSprite = null;
     public RuntimeAnimatorController animator = null;
-    public int enemiesHP = 0;
-    public int enemiesMP = 0;
+    public float enemiesHP = 0;
+    public float enemiesMP = 0;
     public float enemiesATK = 0f;
     public float enemiesDEF = 0f;
     public float enemiesFLEE = 0f;
