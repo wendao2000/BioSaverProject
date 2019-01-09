@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class CharacterAI : MonoBehaviour
 {
     BattleManager bm;
+    CharacterStatus cs;
 
     public enum HeroState
     {
@@ -18,13 +19,15 @@ public class CharacterAI : MonoBehaviour
     public HeroState currentState;
 
     private float cd, curcd = 0f;
+    public Image cooldownBar;
 
     private bool actionDone = false;
 
     void Start()
     {
         bm = FindObjectOfType<BattleManager>();
-        
+        cs = GetComponent<CharacterStatus>();
+
         GameObject.Find("Selector").SetActive(false);
 
         currentState = HeroState.DRAWPHASE;
@@ -54,14 +57,18 @@ public class CharacterAI : MonoBehaviour
 
     void DrawPhase()
     {
+        float cooldownRatio;
+
         if (cd == 0f)
         {
-            cd = Random.Range(2f, 3f);
+            cd = Random.Range(2f, 2.5f);
         }
 
         else if (curcd < cd && (bm.heroQueue.Count == 0 && bm.performList.Count == 0))
         {
             curcd += Time.fixedDeltaTime;
+            cooldownRatio = curcd / cd;
+            cooldownBar.transform.localScale = new Vector3(Mathf.Clamp(cooldownRatio, 0, 1), cooldownBar.transform.localScale.y, cooldownBar.transform.localScale.z);
         }
 
         else if (curcd >= cd)
@@ -89,9 +96,9 @@ public class CharacterAI : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log(name + " hit " + bm.performList[0].target.name + " ass");
+        Attack(bm.performList[0].target.GetComponent<Enemies>());
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
         while (Move(startPos))
         {
@@ -110,5 +117,18 @@ public class CharacterAI : MonoBehaviour
     bool Move(Vector3 target)
     {
         return target != (transform.position = Vector3.MoveTowards(transform.position, target, 20f * Time.deltaTime));
+    }
+
+    private void Attack(Enemies enemy)
+    {
+        bool crit = (cs.CRIT > Random.Range(0, 100)) ? true : false;
+        float attack = Random.Range(cs.minAtk, cs.maxAtk);
+        attack = Mathf.FloorToInt(crit ? attack * cs.CRIT_MULTIPLIER : attack);
+
+        int damageGiven = Mathf.FloorToInt((attack * attack) / (attack + enemy.DEF));
+        enemy.HP = Mathf.Clamp(enemy.HP - damageGiven, 0, enemy.HP);
+
+        Debug.Log("damage: " + damageGiven);
+        Debug.Log("enemy's HP: " + enemy.HP);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
@@ -42,6 +43,8 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         gm = GameManager.GetInstance();
+
+        gm.inBattle = true;
 
         currentState = BattleState.IDLE;
         heroInput = HeroGUI.IDLE;
@@ -104,10 +107,6 @@ public class BattleManager : MonoBehaviour
         heroMove.source = heroQueue[0];
         gm.secondPanel.gameObject.SetActive(true);
         gm.secondPanel.GetComponent<BMSecondPanel>().SecondPanel("Attack");
-        //int playerAtk = CalculateDamage();
-        //int damageGiven = Mathf.FloorToInt((playerAtk * playerAtk) / (playerAtk + enemies.DEF));
-        //GameObject.Find("DamageGiven").GetComponent<TextMeshProUGUI>().text = "Damage Given: " + Mathf.FloorToInt(damageGiven);
-        //enemies.HP = Mathf.Clamp(enemies.HP - damageGiven, 0, enemies.HP);
     }
 
     public void Magic()
@@ -147,16 +146,6 @@ public class BattleManager : MonoBehaviour
 
         heroInput = HeroGUI.IDLE;
     }
-
-    //int CalculateDamage()
-    //{
-    //    bool crit = (cs.critChance > Random.Range(0, 100)) ? true : false;
-    //    float damage = Random.Range(cs.minAtk, cs.maxAtk);
-    //    damage = crit ? damage * cs.critMultiplier : damage;
-    //    GameObject.Find("PlayerAttack").GetComponent<TextMeshProUGUI>().text = "Player Attack: " + Mathf.FloorToInt(damage);
-    //    GameObject.Find("Critical").GetComponent<TextMeshProUGUI>().text = crit ? "Critical!" : "";
-    //    return Mathf.FloorToInt(damage);
-    //}
 
     public void SubmitAction(TurnHandler input)
     {

@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
+[RequireComponent(typeof(Animator))]
 public class Enemies : MonoBehaviour {
 
     public ScriptEnemies source;
+    
     
     public int ID;
     public int HP, MP;
@@ -23,7 +25,9 @@ public class Enemies : MonoBehaviour {
         DEF = source.enemiesDEF;
         FLEE = source.enemiesFLEE;
         EXP = source.enemiesEXP;
-        //GetComponent<SpriteRenderer>().sprite = source.enemiesSprite;
+
+        GetComponent<SpriteRenderer>().sprite = source.enemiesSprite;
+        GetComponent<Animator>().runtimeAnimatorController = source.animator;
     }
 
     void Update()

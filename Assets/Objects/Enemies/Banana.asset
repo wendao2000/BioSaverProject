@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0c02c8e5a6bb1f4baeb0422d47e8200, type: 3}
-  m_Name: Enemies1
+  m_Name: Banana
   m_EditorClassIdentifier: 
-  enemiesID: 10
-  enemiesName: Enemies1
-  enemiesSprite: {fileID: 0}
-  enemiesHP: 10
-  enemiesMP: 20
-  enemiesATK: 30
-  enemiesDEF: 40
-  enemiesFLEE: 50
-  enemiesEXP: 60
+  enemiesID: 12
+  enemiesName: Banana
+  enemiesSprite: {fileID: 21300002, guid: b55ed8644dd07854f909ad92658e0bf6, type: 3}
+  animator: {fileID: 9100000, guid: dba6c97777d36f74baa2ec2ddd8049d5, type: 2}
+  enemiesHP: 30
+  enemiesMP: 0
+  enemiesATK: 12
+  enemiesDEF: 4
+  enemiesFLEE: 0
+  enemiesEXP: 8

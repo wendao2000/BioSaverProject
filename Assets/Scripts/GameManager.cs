@@ -55,6 +55,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        if (bm == null && !inBattle)
+        {
+            ch.transform.position = startPos;
+        }
+    }
+
     void Update()
     {
         moneyText.text = currentMoney.ToString();
@@ -188,10 +196,6 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", -2f) : -2f
             );
 
-        if (!inBattle)
-        {
-            ch.transform.position = startPos;
-        }
         currentMoney = PlayerPrefs.HasKey("playerMoney") ? PlayerPrefs.GetInt("playerMoney", defaultMoney) : defaultMoney;
     }
 

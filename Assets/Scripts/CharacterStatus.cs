@@ -1,21 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class CharacterStatus : MonoBehaviour {
 
     CharacterEquipment ce;
 
-    public int level;
-    public float experience;
+    public int LVL;
 
-    [HideInInspector] public float minAtk, maxAtk;
+    private int EXP;
 
-    public float offsetMinAtk = 0f;
-    public float offsetMaxAtk = 0f;
+    [HideInInspector] public int minAtk, maxAtk;
 
-    public float attackPoint;
-    public float defensePoint;
-    public int critChance;
-    public float critMultiplier;
+    private int offsetMinAtk, offsetMaxAtk;
+
+    public int HP;
+    public int MP;
+    public int ATK;
+    public int DEF;
+    public int CRIT;
+    public float CRIT_MULTIPLIER;
 
     void Awake()
     {
@@ -24,48 +27,66 @@ public class CharacterStatus : MonoBehaviour {
 
     void Start()
     {
-        level = PlayerPrefs.HasKey("pLevel") ? PlayerPrefs.GetInt("pLevel", 1) : 1;
+        LVL = PlayerPrefs.HasKey("pLevel") ? PlayerPrefs.GetInt("pLevel", 1) : 1;
     }
 
     void Update()
     {
-        offsetMinAtk = 1f + level * 0.5f;
-        offsetMaxAtk = 3f + level * 0.8f;
+        offsetMinAtk = Mathf.FloorToInt(1f + LVL * 0.4f);
+        offsetMaxAtk = Mathf.FloorToInt(3f + LVL * 0.6f);
 
-        minAtk = BaseAttack() - offsetMinAtk + (ce.wep ? ce.wep.minAtk : 0f);
-        maxAtk = BaseAttack() + offsetMaxAtk + (ce.wep ? ce.wep.maxAtk : 0f);
-        attackPoint = (minAtk + maxAtk) / 2;
-        defensePoint = BaseDefense() + (ce.arm ? ce.arm.armorValue : 0f);
-        critChance = BaseCritChance() > (ce.wep ? ce.wep.critChance : 0) ? BaseCritChance() : (ce.wep ? ce.wep.critChance : 0);
-        critMultiplier = BaseCritMultiplier() + (ce.wep ? ce.wep.critMultiplier : 0);
+        minAtk = BaseAttack() - offsetMinAtk + (ce.wep ? ce.wep.minAtk : 0);
+        maxAtk = BaseAttack() + offsetMaxAtk + (ce.wep ? ce.wep.maxAtk : 0);
+
+        HP = BaseHealth();
+        MP = BaseMana();
+        ATK = (minAtk + maxAtk) / 2;
+        DEF = BaseDefense() + (ce.arm ? ce.arm.armorValue : 0);
+        CRIT = BaseCritChance() > (ce.wep ? ce.wep.critChance : 0) ? BaseCritChance() : (ce.wep ? ce.wep.critChance : 0);
+        CRIT_MULTIPLIER = BaseCritMultiplier() + (ce.wep ? ce.wep.critMultiplier : 0);
     }
 
-    float BaseAttack()
+    private int BaseHealth()
     {
-        float baseAtk = 24f;
-        float modifier = 3.2f;
-        return baseAtk + (level * modifier);
+        float baseHealth = 30f;
+        float modifier = 8f;
+        return Mathf.FloorToInt(baseHealth + (LVL * modifier));
+
     }
 
-    float BaseDefense()
+    private int BaseMana()
     {
-        float baseArmor = 6f;
-        float modifier = 1.8f;
-        return baseArmor + level * modifier;
+        float baseMana = 8f;
+        float modifier = 3f;
+        return Mathf.FloorToInt(baseMana + (LVL * modifier));
+    }    
+
+    int BaseAttack()
+    {
+        float baseAtk = 12f;
+        float modifier = 2.6f;
+        return Mathf.FloorToInt(baseAtk + (LVL * modifier));
+    }
+
+    int BaseDefense()
+    {
+        float baseArmor = 4f;
+        float modifier = 1.2f;
+        return Mathf.FloorToInt(baseArmor + LVL * modifier);
     }
 
     int BaseCritChance()
     {
-        int baseCritChance = 10;
-        float modifier = .2f;
-        return Mathf.FloorToInt(Mathf.Clamp(baseCritChance + level * modifier, 0f, 40f));
+        int baseCritChance = 5;
+        float modifier = .24f;
+        return Mathf.FloorToInt(Mathf.Clamp(baseCritChance + LVL * modifier, 0f, 40f));
     }
 
-    float BaseCritMultiplier()
+    int BaseCritMultiplier()
     {
-        float baseCritMultiplier = 1.5f;
-        float modifier = .01f;
-        return Mathf.Clamp(baseCritMultiplier + (level * modifier), 1f, 5f);
+        float baseCritMultiplier = 1.2f;
+        float modifier = .04f;
+        return Mathf.FloorToInt(Mathf.Clamp(baseCritMultiplier + (LVL * modifier), 1f, 5f));
     }
 
 }
