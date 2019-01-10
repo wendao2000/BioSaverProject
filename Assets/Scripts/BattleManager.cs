@@ -5,14 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
-
-    //CharacterStatus cs;
     GameManager gm;
+
+    public GameObject endBattlePanel;
 
     public enum BattleState
     {
         IDLE,
-        PERFORMACTION
+        PERFORMACTION,
+        ENDBATTLE
     }
 
     public enum HeroGUI
@@ -25,6 +26,8 @@ public class BattleManager : MonoBehaviour
 
     public BattleState currentState;
     public HeroGUI heroInput;
+
+    [HideInInspector] public int heroDead, enemyDead;
 
     //prefab
     public GameObject enemyButton;
@@ -48,12 +51,18 @@ public class BattleManager : MonoBehaviour
 
         currentState = BattleState.IDLE;
         heroInput = HeroGUI.IDLE;
+
         heroList.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
         enemyList.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
     }
 
     void Update()
     {
+        if(heroDead == heroList.Count || enemyDead == enemyList.Count)
+        {
+            currentState = BattleState.ENDBATTLE;
+        }
+
         switch (currentState)
         {
             case (BattleState.IDLE):
@@ -65,12 +74,16 @@ public class BattleManager : MonoBehaviour
             case (BattleState.PERFORMACTION):
                 PerformAction();
                 break;
+
+            case (BattleState.ENDBATTLE):
+                EndBattle(heroDead == heroList.Count ? "LOSE" : "WIN");
+                break;
         }
 
         switch (heroInput)
         {
             case (HeroGUI.IDLE):
-                //idle, wait for timer
+                //idle, wait for cooldown
                 if (heroQueue.Count > 0)
                 {
                     heroInput = HeroGUI.ACTIVATE;
@@ -166,6 +179,20 @@ public class BattleManager : MonoBehaviour
             hero.currentState = CharacterAI.HeroState.BATTLEPHASE;
         }
         currentState = BattleState.IDLE;
+    }
+
+    private void EndBattle(string result)
+    {
+        switch (result)
+        {
+            case ("WIN"):
+                endBattlePanel.SetActive(true);
+                break;
+
+            case ("LOSE"):
+                endBattlePanel.SetActive(true);
+                break;
+        }
     }
 
     public void SpawnEnemyButton()

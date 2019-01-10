@@ -5,13 +5,14 @@ using UnityStandardAssets.CrossPlatformInput;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Enemies : MonoBehaviour
 {
-
     public ScriptEnemies source;
 
+    [HideInInspector] public int ID;
+    [HideInInspector] public float maxHP, maxMP;
 
-    public int ID;
-    public float maxHP, HP, maxMP, MP;
+    public float HP, MP;
     public float ATK, DEF;
+
     public float FLEE;
     public int EXP;
 
@@ -42,7 +43,8 @@ public class Enemies : MonoBehaviour
 
     private void OnMouseDown()
     {
-        FindObjectOfType<StatusManager>().GetEnemies(this);
+        FindObjectOfType<StatusManager>().GetObject(null, this);
+
         if (!FindObjectOfType<StatusManager>().statusPanel.activeSelf)
         {
             FindObjectOfType<ButtonManager>().ToggleStatusPanel();

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EnemiesAI : MonoBehaviour
 {
+    Animator an;
     BattleManager bm;
     Enemies enemy;
 
@@ -21,19 +22,23 @@ public class EnemiesAI : MonoBehaviour
 
     private bool actionDone = false;
 
-    void Start()
+    private void Start()
     {
+        an = GetComponent<Animator>();
         bm = FindObjectOfType<BattleManager>();
         enemy = GetComponent<Enemies>();
 
         currentState = EnemyState.DRAWPHASE;
     }
 
-    void Update()
+    private void Update()
     {
         if(enemy.HP == 0)
         {
+            an.SetTrigger("Dead");
+            bm.enemyDead++;
             currentState = EnemyState.DEAD;
+            enemy.HP = -1;
         }
 
         switch (currentState)
@@ -51,31 +56,34 @@ public class EnemiesAI : MonoBehaviour
                 StartCoroutine(BattlePhase());
                 break;
             case (EnemyState.DEAD):
-                Debug.Log(name + " is dead");
+                //literally doing nothing
                 break;
         }
     }
 
-    void DrawPhase()
+    private void DrawPhase()
     {
-        if (cd == 0f)
+        if (bm.currentState != BattleManager.BattleState.ENDBATTLE)
         {
-            cd = Random.Range(3f, 3.5f);
-        }
+            if (cd == 0f)
+            {
+                cd = Random.Range(3f, 3.5f);
+            }
 
-        else if (curcd < cd && (bm.heroQueue.Count == 0 && bm.performList.Count == 0))
-        {
-            curcd += Time.fixedDeltaTime;
-        }
+            else if (curcd < cd && (bm.heroQueue.Count == 0 && bm.performList.Count == 0))
+            {
+                curcd += Time.fixedDeltaTime;
+            }
 
-        else if (curcd >= cd)
-        {
-            cd = curcd = 0f;
-            currentState = EnemyState.MAINPHASE;
+            else if (curcd >= cd)
+            {
+                cd = curcd = 0f;
+                currentState = EnemyState.MAINPHASE;
+            }
         }
     }
 
-    void MainPhase()
+    private void MainPhase()
     {
         TurnHandler attack = new TurnHandler
         {
@@ -88,7 +96,7 @@ public class EnemiesAI : MonoBehaviour
         currentState = EnemyState.WAITPHASE;
     }
 
-    IEnumerator BattlePhase()
+    private IEnumerator BattlePhase()
     {
         if (actionDone)
         {
@@ -100,14 +108,16 @@ public class EnemiesAI : MonoBehaviour
         Vector2 startPos = transform.position;
         Vector2 targetPos = bm.performList[0].target.transform.position;
 
-        GetComponent<Animator>().SetTrigger("Attack");
+        an.SetTrigger("Attack");
+
+        GetComponent<SpriteRenderer>().sortingOrder = 1;
 
         while (Move(targetPos))
         {
             yield return null;
         }
 
-        Attack(bm.performList[0].target.GetComponent<CharacterStatus>());
+        Attack(bm.performList[0].target.GetComponent<Character>());
 
         yield return new WaitForSeconds(0.2f);
 
@@ -115,6 +125,8 @@ public class EnemiesAI : MonoBehaviour
         {
             yield return null;
         }
+
+        GetComponent<SpriteRenderer>().sortingOrder = 0;
 
         bm.performList.RemoveAt(0);
 
@@ -125,12 +137,12 @@ public class EnemiesAI : MonoBehaviour
         currentState = EnemyState.DRAWPHASE;
     }
 
-    bool Move(Vector3 target)
+    private bool Move(Vector3 target)
     {
         return target != (transform.position = Vector3.MoveTowards(transform.position, target, 20f * Time.deltaTime));
     }
 
-    private void Attack(CharacterStatus hero)
+    private void Attack(Character hero)
     {
         int damageGiven = Mathf.FloorToInt((enemy.ATK * enemy.ATK) / (enemy.ATK + hero.DEF));
         hero.HP = Mathf.Clamp(hero.HP - damageGiven, 0, hero.HP);

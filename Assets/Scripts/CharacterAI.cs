@@ -4,8 +4,9 @@ using UnityEngine.UI;
 
 public class CharacterAI : MonoBehaviour
 {
+    Animator an;
     BattleManager bm;
-    CharacterStatus cs;
+    Character chara;
 
     public enum HeroState
     {
@@ -25,8 +26,9 @@ public class CharacterAI : MonoBehaviour
 
     void Start()
     {
+        an = GetComponent<Animator>();
         bm = FindObjectOfType<BattleManager>();
-        cs = GetComponent<CharacterStatus>();
+        chara = GetComponent<Character>();
 
         GameObject.Find("Selector").SetActive(false);
 
@@ -35,6 +37,14 @@ public class CharacterAI : MonoBehaviour
 
     void Update()
     {
+        if (chara.HP == 0)
+        {
+            an.SetTrigger("Dead");
+            bm.heroDead++;
+            currentState = HeroState.DEAD;
+            chara.HP = -1;
+        }
+
         switch (currentState)
         {
             case (HeroState.DRAWPHASE):
@@ -59,23 +69,26 @@ public class CharacterAI : MonoBehaviour
     {
         float cooldownRatio;
 
-        if (cd == 0f)
+        if (bm.currentState != BattleManager.BattleState.ENDBATTLE)
         {
-            cd = Random.Range(2f, 2.5f);
-        }
+            if (cd == 0f)
+            {
+                cd = Random.Range(2f, 2.5f);
+            }
 
-        else if (curcd < cd && (bm.heroQueue.Count == 0 && bm.performList.Count == 0))
-        {
-            curcd += Time.fixedDeltaTime;
-            cooldownRatio = curcd / cd;
-            cooldownBar.transform.localScale = new Vector3(Mathf.Clamp(cooldownRatio, 0, 1), cooldownBar.transform.localScale.y, cooldownBar.transform.localScale.z);
-        }
+            else if (curcd < cd && (bm.heroQueue.Count == 0 && bm.performList.Count == 0))
+            {
+                curcd += Time.fixedDeltaTime;
+                cooldownRatio = curcd / cd;
+                cooldownBar.transform.localScale = new Vector3(Mathf.Clamp(cooldownRatio, 0, 1), cooldownBar.transform.localScale.y, cooldownBar.transform.localScale.z);
+            }
 
-        else if (curcd >= cd)
-        {
-            cd = curcd = 0f;
-            bm.heroQueue.Add(gameObject);
-            currentState = HeroState.MAINPHASE;
+            else if (curcd >= cd)
+            {
+                cd = curcd = 0f;
+                bm.heroQueue.Add(gameObject);
+                currentState = HeroState.MAINPHASE;
+            }
         }
     }
 
@@ -91,6 +104,10 @@ public class CharacterAI : MonoBehaviour
         Vector2 startPos = transform.position;
         Vector2 targetPos = bm.performList[0].target.transform.position;
 
+        an.SetTrigger("Attack");
+
+        GetComponent<SpriteRenderer>().sortingOrder = 1;
+
         while (Move(targetPos))
         {
             yield return null;
@@ -105,6 +122,8 @@ public class CharacterAI : MonoBehaviour
             yield return null;
         }
 
+        GetComponent<SpriteRenderer>().sortingOrder = 0;
+
         bm.performList.RemoveAt(0);
 
         bm.currentState = BattleManager.BattleState.IDLE;
@@ -114,16 +133,21 @@ public class CharacterAI : MonoBehaviour
         currentState = HeroState.DRAWPHASE;
     }
 
-    bool Move(Vector3 target)
+    private void DeadPhase()
+    {
+        an.SetTrigger("Dead");
+    }
+
+    private bool Move(Vector3 target)
     {
         return target != (transform.position = Vector3.MoveTowards(transform.position, target, 20f * Time.deltaTime));
     }
 
     private void Attack(Enemies enemy)
     {
-        bool crit = (cs.CRIT > Random.Range(0, 100)) ? true : false;
-        float attack = Random.Range(cs.minAtk, cs.maxAtk);
-        attack = Mathf.FloorToInt(crit ? attack * cs.CRIT_MULTIPLIER : attack);
+        bool crit = (chara.CRIT > Random.Range(0, 100)) ? true : false;
+        float attack = Random.Range(chara.minAtk, chara.maxAtk);
+        attack = Mathf.FloorToInt(crit ? attack * chara.CRIT_MULTIPLIER : attack);
 
         int damageGiven = Mathf.FloorToInt((attack * attack) / (attack + enemy.DEF));
         enemy.HP = Mathf.Clamp(enemy.HP - damageGiven, 0, enemy.HP);

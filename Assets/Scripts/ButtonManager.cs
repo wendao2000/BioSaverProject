@@ -28,7 +28,7 @@ public class ButtonManager : MonoBehaviour
     {
         bm = FindObjectOfType<BattleManager>();
 
-        if(bm != null)
+        if (bm != null)
         {
             sm = bm.GetComponent<StatusManager>();
         }
