@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.CrossPlatformInput;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public CharacterMovement ch;
     [HideInInspector] public CharacterInventory cv;
     [HideInInspector] public ShopManager sm;
+
+    public EnemiesList[] enemies;
 
     [Header("Canvas References")]
     //redirect to canvas
@@ -52,14 +55,6 @@ public class GameManager : MonoBehaviour
         if (!instance)
         {
             instance = this;
-        }
-    }
-
-    void Start()
-    {
-        if (bm == null && !inBattle)
-        {
-            ch.transform.position = startPos;
         }
     }
 
@@ -157,6 +152,7 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region BattleMode
     public void EnterBattle(int index)
     {
         PlayerPrefs.SetInt("EnemiesID", index);
@@ -164,7 +160,8 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat("startPos.X", ch.transform.position.x);
         PlayerPrefs.SetFloat("startPos.Y", ch.transform.position.y);
         battleMode.SetActive(true);
-        SceneManager.LoadScene("battleScene");
+        StartCoroutine(Fade());
+        SceneManager.LoadScene("BattleScene");
     }
 
     public void ExitBattle()
@@ -172,7 +169,48 @@ public class GameManager : MonoBehaviour
         battleMode.SetActive(false);
         SceneManager.LoadScene(PlayerPrefs.GetInt("lastScene"));
     }
+    #endregion
 
+    #region MainMenu
+
+    public void MainMenu()
+    {
+        GameObject.Find("MainMenu").GetComponent<Animator>().SetTrigger("MainMenu");
+    }
+
+    public void Play()
+    {
+        StartCoroutine(Fade());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    #endregion
+
+    #region ENEMIES DATABASE???
+    public ScriptEnemies GetEnemies(int ID)
+    {
+        if (ID == 12)
+        {
+            return enemies[0].enemy;
+        }
+        else if (ID == 13)
+        {
+            return enemies[1].enemy;
+        }
+        else return null;
+    }
+    #endregion
+
+    #region Animator
+    public IEnumerator Fade()
+    {
+        GameObject.Find("Fade").GetComponent<Animator>().SetTrigger("Fade");
+
+        yield return new WaitForSeconds(1f);
+    }
+    #endregion
+
+    #region Miscellaneous
     public void Save()
     {
         PlayerPrefs.SetInt("playerMoney", currentMoney);
@@ -208,4 +246,5 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
     }
+    #endregion
 }

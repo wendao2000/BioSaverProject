@@ -111,8 +111,8 @@ MonoBehaviour:
   source: {fileID: 0}
   ID: 0
   maxHP: 0
-  HP: 0
   maxMP: 0
+  HP: 0
   MP: 0
   ATK: 0
   DEF: 0
@@ -131,7 +131,7 @@ Animator:
   m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -161,5 +161,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4, y: 4}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0

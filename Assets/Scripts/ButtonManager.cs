@@ -2,31 +2,19 @@
 
 public class ButtonManager : MonoBehaviour
 {
-
     public static ButtonManager instance;
 
     BattleManager bm;
+    GameManager gm;
     StatusManager sm;
 
     public bool confirmed = false;
     public bool pressed = false;
 
-    void Awake()
-    {
-        if (!instance)
-        {
-            instance = this;
-            DontDestroyOnLoad(instance);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     void Start()
     {
         bm = FindObjectOfType<BattleManager>();
+        gm = GameManager.GetInstance();
 
         if (bm != null)
         {
@@ -73,6 +61,20 @@ public class ButtonManager : MonoBehaviour
     {
         sm.statusPanel.SetActive(!sm.statusPanel.activeSelf);
         sm.toggleButton.SetActive(!sm.toggleButton.activeSelf);
+    }
+
+    #endregion
+
+    #region MainMenu
+
+    public void MainMenu()
+    {
+        gm.MainMenu();
+    }
+
+    public void Play()
+    {
+        gm.Play();
     }
 
     #endregion

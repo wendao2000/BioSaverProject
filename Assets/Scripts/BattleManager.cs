@@ -7,6 +7,7 @@ public class BattleManager : MonoBehaviour
 {
     GameManager gm;
 
+    public GameObject enemy;
     public GameObject endBattlePanel;
 
     public enum BattleState
@@ -45,8 +46,6 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        gm = GameManager.GetInstance();
-
         gm.inBattle = true;
 
         currentState = BattleState.IDLE;
@@ -58,7 +57,7 @@ public class BattleManager : MonoBehaviour
 
     void Update()
     {
-        if(heroDead == heroList.Count || enemyDead == enemyList.Count)
+        if (heroDead == heroList.Count || enemyDead == enemyList.Count)
         {
             currentState = BattleState.ENDBATTLE;
         }
@@ -110,10 +109,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    private void GenerateEnemies()
-    {
-
-    }
+    #region ActionButton
 
     public void Attack()
     {
@@ -141,6 +137,10 @@ public class BattleManager : MonoBehaviour
 
     }
 
+    #endregion
+
+    #region Miscellaneous
+
     public void Target(GameObject obj)
     {
         heroMove.target = obj;
@@ -164,6 +164,8 @@ public class BattleManager : MonoBehaviour
     {
         performList.Add(input);
     }
+
+    #endregion
 
     void PerformAction()
     {
@@ -210,5 +212,24 @@ public class BattleManager : MonoBehaviour
 
             newButton.transform.SetParent(gm.secondPanel.GetComponent<BMSecondPanel>().layout, false);
         }
+    }
+
+    private void GenerateEnemies()
+    {
+        GameObject newEnemy = Instantiate(enemy);
+        newEnemy.transform.position = new Vector2(6.5f, 1.5f);
+        newEnemy.GetComponent<Enemies>().source = gm.GetEnemies(PlayerPrefs.GetInt("EnemiesID"));
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        gm = GameManager.GetInstance();
+
+        GenerateEnemies();
     }
 }

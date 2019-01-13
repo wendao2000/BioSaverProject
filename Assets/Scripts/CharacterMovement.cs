@@ -93,8 +93,6 @@ public class CharacterMovement : MonoBehaviour
             if (directionY < 0 && collision.gameObject.GetComponent<ColliderModifier>().fallable)
             {
                 collision.gameObject.GetComponent<Collider2D>().enabled = false;
-                
-                Debug.Log("Fall");
             }
         }
     }

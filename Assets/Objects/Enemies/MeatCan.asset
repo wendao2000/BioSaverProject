@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0c02c8e5a6bb1f4baeb0422d47e8200, type: 3}
+  m_Name: MeatCan
+  m_EditorClassIdentifier: 
+  enemiesID: 13
+  enemiesName: Meat Can
+  enemiesSprite: {fileID: 21300010, guid: 341c0c73bde42db41afcb6296c9988e6, type: 3}
+  animator: {fileID: 9100000, guid: 16c70184557579f4b805d21a901de59a, type: 2}
+  enemiesHP: 42
+  enemiesMP: 8
+  enemiesATK: 14
+  enemiesDEF: 2
+  enemiesFLEE: 2
+  enemiesEXP: 12

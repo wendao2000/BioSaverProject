@@ -64,8 +64,6 @@ public class ShopManager : MonoBehaviour
                 shopList.LastOrDefault().AddComponent<Item>().source = shopContent.item[i].item;
             }
         }
-
-        Debug.Log("Shop Content Generated");
     }
 
     public void DestroyShopContent()
@@ -75,8 +73,6 @@ public class ShopManager : MonoBehaviour
             Destroy(gm.shopContentPanel.transform.GetChild(i).gameObject);
         }
         shopList.Clear();
-
-        Debug.Log("Shop Content Destroyed");
     }
 
     public IEnumerator Buy(GameObject objectToBuy)

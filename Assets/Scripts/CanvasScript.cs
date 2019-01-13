@@ -6,7 +6,7 @@ public class CanvasScript : MonoBehaviour {
 
     void Awake()
     {
-        if (!instance)
+        /*if (!instance)
         {
             instance = this;
             DontDestroyOnLoad(instance);
@@ -14,6 +14,6 @@ public class CanvasScript : MonoBehaviour {
         else
         {
             Destroy(gameObject);
-        }
+        }*/
     }
 }

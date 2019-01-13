@@ -10,19 +10,19 @@ public class Character : MonoBehaviour {
 
     private int EXP;
 
+    private int offsetMinAtk, offsetMaxAtk;
+
     [HideInInspector] public float minAtk, maxAtk;
     [HideInInspector] public float maxHP, maxMP;
 
-    private int offsetMinAtk, offsetMaxAtk;
+    [HideInInspector] public float HP;
+    [HideInInspector] public float MP;
 
-    public float HP;
-    public float MP;
+    [HideInInspector] public float ATK;
+    [HideInInspector] public float DEF;
 
-    public float ATK;
-    public float DEF;
-
-    public float CRIT;
-    public float CRIT_MULTIPLIER;
+    [HideInInspector] public float CRIT;
+    [HideInInspector] public float CRIT_MULTIPLIER;
 
     void Awake()
     {
@@ -107,7 +107,7 @@ public class Character : MonoBehaviour {
 
     #endregion
 
-    public void Experience(int value)
+    public void GainExperience(int value)
     {
         EXP += value;
     }
@@ -117,13 +117,16 @@ public class Character : MonoBehaviour {
 
     }
 
-    private void OnMouseDown()
+    private void OnMouseDown() //BattleMode
     {
-        FindObjectOfType<StatusManager>().GetObject(this, null);
-
-        if (!FindObjectOfType<StatusManager>().statusPanel.activeSelf)
+        if (FindObjectOfType<BattleManager>())
         {
-            FindObjectOfType<ButtonManager>().ToggleStatusPanel();
+            FindObjectOfType<StatusManager>().GetObject(this, null);
+
+            if (!FindObjectOfType<StatusManager>().statusPanel.activeSelf)
+            {
+                FindObjectOfType<ButtonManager>().ToggleStatusPanel();
+            }
         }
     }
 

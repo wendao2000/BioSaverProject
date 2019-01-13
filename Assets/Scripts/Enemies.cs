@@ -10,22 +10,26 @@ public class Enemies : MonoBehaviour
     [HideInInspector] public int ID;
     [HideInInspector] public float maxHP, maxMP;
 
-    public float HP, MP;
-    public float ATK, DEF;
+    [HideInInspector] public float HP, MP;
+    [HideInInspector] public float ATK, DEF;
 
-    public float FLEE;
-    public int EXP;
+    [HideInInspector] public float FLEE;
+    [HideInInspector] public int EXP;
 
     bool collide = false;
 
     void Start()
     {
         name = source.enemiesName;
+
         ID = source.enemiesID;
+
         maxHP = HP = source.enemiesHP;
         maxMP = MP = source.enemiesMP;
+
         ATK = source.enemiesATK;
         DEF = source.enemiesDEF;
+
         FLEE = source.enemiesFLEE;
         EXP = source.enemiesEXP;
 
@@ -41,13 +45,16 @@ public class Enemies : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    private void OnMouseDown() //BattleMode
     {
-        FindObjectOfType<StatusManager>().GetObject(null, this);
-
-        if (!FindObjectOfType<StatusManager>().statusPanel.activeSelf)
+        if (FindObjectOfType<BattleManager>())
         {
-            FindObjectOfType<ButtonManager>().ToggleStatusPanel();
+            FindObjectOfType<StatusManager>().GetObject(null, this);
+
+            if (!FindObjectOfType<StatusManager>().statusPanel.activeSelf)
+            {
+                FindObjectOfType<ButtonManager>().ToggleStatusPanel();
+            }
         }
     }
 
@@ -57,8 +64,6 @@ public class Enemies : MonoBehaviour
         {
             collide = true;
             //gm.UpdateInteraction("Fight");
-
-            Debug.Log("Enter Enemies");
         }
     }
 
@@ -68,8 +73,6 @@ public class Enemies : MonoBehaviour
         {
             collide = false;
             //gm.UpdateInteraction("Normal");
-
-            Debug.Log("Exit Enemies");
         }
     }
 }
