@@ -1,10 +1,18 @@
 fileFormatVersion: 2
-guid: b55ed8644dd07854f909ad92658e0bf6
+guid: 405c2d491b39fb54ba81cd47c4b5ca82
 TextureImporter:
   fileIDToRecycleName:
-    21300000: BananaIdleWalk_0
-    21300002: BananaIdleWalk_1
-    21300004: BananaIdleWalk_2
+    21300000: Gas_0
+    21300002: Gas_1
+    21300004: Gas_2
+    21300006: Gas_3
+    21300008: Gas_4
+    21300010: Gas_5
+    21300012: Gas_6
+    21300014: Gas_7
+    21300016: Gas_8
+    21300018: Gas_9
+    21300020: Gas_10
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -34,7 +42,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: -1
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -48,7 +56,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 256
+  spritePixelsToUnits: 400
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -63,7 +71,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 2
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -74,7 +82,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: Standalone
-    maxTextureSize: 1024
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -85,7 +93,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: Android
-    maxTextureSize: 1024
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -98,61 +106,81 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BananaIdleWalk_0
+      name: Gas_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
-        height: 1024
+        width: 629
+        height: 1207
       alignment: 9
-      pivot: {x: 0.5078125, y: 0.43945312}
+      pivot: {x: 0.50874406, y: 0.49710023}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4804ea1f22517384b89e7dd15fa23d94
+      spriteID: 2e8067291d19c6746894536b77336527
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BananaIdleWalk_1
+      name: Gas_1
       rect:
         serializedVersion: 2
-        x: 1024
-        y: 0
-        width: 1024
-        height: 1024
+        x: 646
+        y: 100
+        width: 531
+        height: 1005
       alignment: 9
-      pivot: {x: 0.5175781, y: 0.29296875}
+      pivot: {x: 0.65913373, y: 0.49751243}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1c3499c2af28dbb4392bd939825deea1
+      spriteID: b9e5557a7e7316c4ea6d510bad6b46ea
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BananaIdleWalk_2
+      name: Gas_2
       rect:
         serializedVersion: 2
-        x: 2048
+        x: 1238
         y: 0
-        width: 1024
-        height: 1024
+        width: 447
+        height: 1359
       alignment: 9
-      pivot: {x: 0.48828125, y: 0.3515625}
+      pivot: {x: 0.53691274, y: 0.4267844}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 92229936ac0bf8c44809ca61024ffbca
+      spriteID: ed97338c62a028d4db5a50332a0746a8
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gas_3
+      rect:
+        serializedVersion: 2
+        x: 1831
+        y: 262
+        width: 977
+        height: 835
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b4fa21b95187894583f38bdc4a93606
       vertices: []
       indices: 
       edges: []
@@ -160,7 +188,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 74cd035c49c74274a9d5c000d0ffe3b9
+    spriteID: cf54ad52753f628439083ec274f6c5ba
     vertices: []
     indices: 
     edges: []

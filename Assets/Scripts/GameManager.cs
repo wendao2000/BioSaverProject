@@ -197,6 +197,10 @@ public class GameManager : MonoBehaviour
         {
             return enemies[1].enemy;
         }
+        else if (ID == 14)
+        {
+            return enemies[2].enemy;
+        }
         else return null;
     }
     #endregion

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0c02c8e5a6bb1f4baeb0422d47e8200, type: 3}
+  m_Name: ToxicGas
+  m_EditorClassIdentifier: 
+  enemiesID: 14
+  enemiesName: Toxic Gas
+  enemiesSprite: {fileID: 21300000, guid: 405c2d491b39fb54ba81cd47c4b5ca82, type: 3}
+  animator: {fileID: 9100000, guid: 3ec7f6966fc4bb740b96814ba38e81cf, type: 2}
+  enemiesHP: 60
+  enemiesMP: 12
+  enemiesATK: 8
+  enemiesDEF: 0
+  enemiesFLEE: 24
+  enemiesEXP: 16
