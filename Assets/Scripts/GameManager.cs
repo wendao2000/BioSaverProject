@@ -16,17 +16,16 @@ public class GameManager : MonoBehaviour
         Exit
     }
 
-    public static GameManager instance;
+    [HideInInspector] public Character chara;
 
     [HideInInspector] public BattleManager battleManager;
     [HideInInspector] public ButtonManager buttonManager;
-    [HideInInspector] public CharacterMovement charaMove;
-    [HideInInspector] public CharacterInventory charaInven;
     [HideInInspector] public ShopManager shopManager;
 
     public EnemiesList[] enemies; //temporary database
 
     [Header("Canvas References")] //redirect to canvas GameObject
+    public GameObject charaBriefInfo;
     public GameObject characterInformation;
     public GameObject inventory;
     public GameObject shop;
@@ -61,15 +60,22 @@ public class GameManager : MonoBehaviour
     {
         interactButton.GetComponent<Image>().sprite = buttonList[(int)InteractButton.Normal]; //reset virtual interaction button to normal
 
+        chara = FindObjectOfType<Character>();
+
         battleManager = FindObjectOfType<BattleManager>();
         buttonManager = FindObjectOfType<ButtonManager>();
-        charaMove = FindObjectOfType<CharacterMovement>();
-        charaInven = FindObjectOfType<CharacterInventory>();
         shopManager = FindObjectOfType<ShopManager>();
+
+        currentMoney = PlayerPrefs.GetInt("playerMoney", defaultMoney);
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            Reset();
+        }
+
         moneyText.text = currentMoney.ToString(); //get money
 
         #region CharacterInteraction
@@ -119,35 +125,35 @@ public class GameManager : MonoBehaviour
     }
 
     #region UI Interaction
-    public void CharacterInformation()
+    private void Interact(GameObject input)
     {
         interacting = !interacting;
-        charaMove.paralyzed = !charaMove.paralyzed;
-        characterInformation.SetActive(!characterInformation.activeSelf);
+        chara.charaMove.paralyzed = !chara.charaMove.paralyzed;
+        input.SetActive(!input.activeSelf);
+    }
+
+    public void CharacterInformation()
+    {
+        Interact(characterInformation);
     }
 
     public void Inventory()
     {
-        charaMove.paralyzed = !charaMove.paralyzed;
-        interacting = !interacting;
-        inventory.SetActive(!inventory.activeSelf);
+        Interact(inventory);
     }
 
     public void Shop()
     {
-        if (!shop.activeSelf)
+        if (shop.activeSelf)
+        {
+            shopManager.DestroyShopContent();
+        }
+        else
         {
             shopManager.GenerateShopContent();
         }
 
-        else
-        {
-            shopManager.DestroyShopContent();
-        }
-
-        charaMove.paralyzed = !charaMove.paralyzed;
-        interacting = !interacting;
-        shop.SetActive(!shop.activeSelf);
+        Interact(shop);
     }
 
     public void UpdateInteraction(string value)
@@ -177,19 +183,27 @@ public class GameManager : MonoBehaviour
     #region BattleMode
     public IEnumerator EnterBattle(int index)
     {
+        Save();
+
         PlayerPrefs.SetInt("EnemiesID", index);
         PlayerPrefs.SetInt("lastScene", SceneManager.GetActiveScene().buildIndex);
-        PlayerPrefs.SetFloat("startPos.X", charaMove.transform.position.x);
-        PlayerPrefs.SetFloat("startPos.Y", charaMove.transform.position.y);
+        PlayerPrefs.SetFloat("startPos.X", chara.transform.position.x);
+        PlayerPrefs.SetFloat("startPos.Y", chara.transform.position.y);
+
         GameObject.Find("Fade").GetComponent<Animator>().SetTrigger("Fade");
         yield return new WaitForSeconds(1f);
+
         SceneManager.LoadScene("BattleScene");
     }
 
     public IEnumerator ExitBattle()
     {
+        //chara.GainExperience(battleManager.expGained); //broken
+        PlayerPrefs.SetInt("pCurEXP", (int)chara.EXP);
+
         GameObject.Find("Fade").GetComponent<Animator>().SetTrigger("Fade");
         yield return new WaitForSeconds(1f);
+
         SceneManager.LoadScene(PlayerPrefs.GetInt("lastScene"));
     }
     #endregion
@@ -212,7 +226,7 @@ public class GameManager : MonoBehaviour
     #region Gameplay
     public void Pause()
     {
-        
+
     }
 
     public void Setting()
@@ -236,26 +250,34 @@ public class GameManager : MonoBehaviour
         {
             return enemies[2].enemy;
         }
+        else if (ID == 15)
+        {
+            return enemies[3].enemy;
+        }
+        else if (ID == 16)
+        {
+            return enemies[4].enemy;
+        }
         else return null;
     }
     #endregion
 
     #region Miscellaneous
+    public void Reset()
+    {
+        Debug.Log("Reset..");
+        chara.LVL = 1;
+        chara.EXP = 0;
+        PlayerPrefs.DeleteAll();
+    }
+
     public void Save()
     {
+        PlayerPrefs.SetInt("pLevel", chara.LVL);
+        PlayerPrefs.SetInt("pCurHealth", (int)chara.HP);
+        PlayerPrefs.SetInt("pCurMana", (int)chara.MP);
+        PlayerPrefs.SetInt("pCurEXP", (int)chara.EXP);
         PlayerPrefs.SetInt("playerMoney", currentMoney);
-    }
-
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        //startPos = new Vector2(PlayerPrefs.GetFloat("startPos.X"),PlayerPrefs.GetFloat("startPos.Y"));
-
-        currentMoney = PlayerPrefs.GetInt("playerMoney", defaultMoney);
     }
     #endregion
 }

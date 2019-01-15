@@ -44,18 +44,27 @@ public class BattleManager : MonoBehaviour
 
     TurnHandler heroMove = new TurnHandler();
 
+    public int expGained = 0; //broken?
+
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
         statusManager = GetComponent<StatusManager>();
 
-        currentState = BattleState.IDLE;
-        heroInput = HeroGUI.IDLE;
+        heroDead = enemyDead = 0;
 
         GenerateEnemies();
 
+        currentState = BattleState.IDLE;
+        heroInput = HeroGUI.IDLE;
+
         heroList.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
         enemyList.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+
+        foreach (GameObject enema in enemyList)
+        {
+            expGained += enema.GetComponent<Enemies>().EXP; //broken
+        }
     }
 
     void Update()
@@ -185,24 +194,17 @@ public class BattleManager : MonoBehaviour
 
     private void EndBattle(string result)
     {
+        endBattlePanel.SetActive(true);
+        endBattlePanel.GetComponent<Animator>().SetTrigger("Activate");
+
         switch (result)
         {
             case ("WIN"):
-                int expGained = 0;
-                foreach(GameObject enemy in enemyList)
-                {
-                    expGained += enemy.GetComponent<Enemies>().EXP;
-                }
-
-                endBattlePanel.SetActive(true);
-                endBattlePanel.GetComponent<Animator>().SetTrigger("Activate");
                 endBattlePanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = "You Win";
-                endBattlePanel.transform.Find("ExperienceGained").GetComponent<TextMeshProUGUI>().text = "Experience Gained: " + expGained;
+                endBattlePanel.transform.Find("ExperienceGained").GetComponent<TextMeshProUGUI>().text = "Experience Gained: " + expGained; //broken
                 break;
 
             case ("LOSE"):
-                endBattlePanel.SetActive(true);
-                endBattlePanel.GetComponent<Animator>().SetTrigger("Activate");
                 endBattlePanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = "You Lose";
                 endBattlePanel.transform.Find("ExperienceGained").GetComponent<TextMeshProUGUI>().text = "";
                 break;

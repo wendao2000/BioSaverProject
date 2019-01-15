@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0c02c8e5a6bb1f4baeb0422d47e8200, type: 3}
-  m_Name: Banana
+  m_Name: NoodleCup
   m_EditorClassIdentifier: 
-  enemiesID: 12
-  enemiesName: Banana
-  enemiesSprite: {fileID: 21300002, guid: b55ed8644dd07854f909ad92658e0bf6, type: 3}
-  animator: {fileID: 9100000, guid: dba6c97777d36f74baa2ec2ddd8049d5, type: 2}
-  enemiesHP: 32
-  enemiesMP: 6
-  enemiesATK: 12
-  enemiesDEF: 3
-  enemiesFLEE: 6
-  enemiesEXP: 12
+  enemiesID: 16
+  enemiesName: Noodle Cup
+  enemiesSprite: {fileID: 21300002, guid: b7cb4a688a57f3944b9c385dbeb1810e, type: 3}
+  animator: {fileID: 9100000, guid: 540ff176d64f74344970914ee369e8e7, type: 2}
+  enemiesHP: 140
+  enemiesMP: 30
+  enemiesATK: 36
+  enemiesDEF: 12
+  enemiesFLEE: 24
+  enemiesEXP: 64

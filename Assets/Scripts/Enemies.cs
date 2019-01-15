@@ -12,11 +12,11 @@ public class Enemies : MonoBehaviour
     [HideInInspector] public int ID;
     [HideInInspector] public float maxHP, maxMP;
 
-    [HideInInspector] public float HP, MP;
-    [HideInInspector] public float ATK, DEF;
+    public float HP, MP;
+    public float ATK, DEF;
 
-    [HideInInspector] public float FLEE;
-    [HideInInspector] public int EXP;
+    public float FLEE;
+    public int EXP;
 
     bool collide = false;
 

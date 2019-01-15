@@ -16,9 +16,9 @@ MonoBehaviour:
   enemiesName: Meat Can
   enemiesSprite: {fileID: 21300010, guid: 341c0c73bde42db41afcb6296c9988e6, type: 3}
   animator: {fileID: 9100000, guid: 16c70184557579f4b805d21a901de59a, type: 2}
-  enemiesHP: 42
+  enemiesHP: 40
   enemiesMP: 8
-  enemiesATK: 14
-  enemiesDEF: 2
-  enemiesFLEE: 2
-  enemiesEXP: 12
+  enemiesATK: 16
+  enemiesDEF: 5
+  enemiesFLEE: 3
+  enemiesEXP: 18

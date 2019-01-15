@@ -92,9 +92,9 @@ public class ShopManager : MonoBehaviour
             {
                 BuyNotification(true);
                 gm.currentMoney -= itemPrice;
-                gm.charaInven.inventoryList.Add(Instantiate(objectToBuy));
-                Destroy(gm.charaInven.inventoryList.LastOrDefault().GetComponent<ShopItem>());
-                gm.charaInven.inventoryList.LastOrDefault().transform.SetParent(gm.inventoryList.transform);
+                gm.chara.charaInven.inventoryList.Add(Instantiate(objectToBuy));
+                Destroy(gm.chara.charaInven.inventoryList.LastOrDefault().GetComponent<ShopItem>());
+                gm.chara.charaInven.inventoryList.LastOrDefault().transform.SetParent(gm.inventoryList.transform);
             }
             else
             {

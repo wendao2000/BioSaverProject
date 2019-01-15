@@ -2,14 +2,17 @@
 
 public class Character : MonoBehaviour
 {
+    [HideInInspector] public CharacterMovement charaMove;
+    [HideInInspector] public CharacterInventory charaInven;
 
     GameManager gm;
+
     CharacterEquipment ce;
 
     public int LVL;
     private int curLVL = 0; //check if level changed
-
-    private int EXP;
+    
+    [HideInInspector] public float EXP, nextEXP;
 
     [HideInInspector] public float maxHP, maxMP;
     [HideInInspector] public float minAtk, maxAtk;
@@ -27,6 +30,8 @@ public class Character : MonoBehaviour
         LVL = PlayerPrefs.GetInt("pLevel", 1);
         HP = PlayerPrefs.GetInt("pCurHealth", (int)BaseHealth());
         MP = PlayerPrefs.GetInt("pCurMana", (int)BaseMana());
+        EXP = PlayerPrefs.GetInt("pCurEXP", 0);
+        nextEXP = 25;
 
         maxHP = BaseHealth();
         maxMP = BaseMana();
@@ -104,6 +109,12 @@ public class Character : MonoBehaviour
     public void GainExperience(int value)
     {
         EXP += value;
+        if (EXP > nextEXP)
+        {
+            LVL++;
+            EXP -= nextEXP;
+            //nextEXP = //check for EXPTable;
+        }
     }
 
     public void SkillAvailable() //Magic
