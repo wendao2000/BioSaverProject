@@ -24,7 +24,7 @@ public class ShopManager : MonoBehaviour
         confirmPanel = gm.confirmationPanel.transform;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (CrossPlatformInputManager.GetButtonDown("Interact"))
         {

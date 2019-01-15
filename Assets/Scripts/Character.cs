@@ -25,6 +25,8 @@ public class Character : MonoBehaviour
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
+        charaMove = FindObjectOfType<CharacterMovement>();
+        charaInven = FindObjectOfType<CharacterInventory>();
         ce = FindObjectOfType<CharacterEquipment>();
 
         LVL = PlayerPrefs.GetInt("pLevel", 1);
@@ -39,6 +41,12 @@ public class Character : MonoBehaviour
 
     void Update()
     {
+        if (EXP >= nextEXP)
+        {
+            EXP -= nextEXP;
+            LVL++;
+        }
+
         if (curLVL != LVL) //increase status if level up
         {
             HP = Mathf.Floor(HP / maxHP * BaseHealth());
@@ -109,12 +117,6 @@ public class Character : MonoBehaviour
     public void GainExperience(int value)
     {
         EXP += value;
-        if (EXP > nextEXP)
-        {
-            LVL++;
-            EXP -= nextEXP;
-            //nextEXP = //check for EXPTable;
-        }
     }
 
     public void SkillAvailable() //Magic

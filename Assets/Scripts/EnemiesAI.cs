@@ -22,7 +22,7 @@ public class EnemiesAI : MonoBehaviour
 
     private bool actionDone = false;
 
-    private void Start()
+    void Start()
     {
         an = GetComponent<Animator>();
         bm = FindObjectOfType<BattleManager>();
@@ -31,11 +31,11 @@ public class EnemiesAI : MonoBehaviour
         currentState = EnemyState.DRAWPHASE;
     }
 
-    private void Update()
+    void Update()
     {
-        if(enemy.HP == 0)
+        if (enemy.HP == 0)
         {
-            an.SetTrigger("Dead");
+            //an.SetTrigger("Dead"); //no animation, yet.
             bm.enemyDead++;
             currentState = EnemyState.DEAD;
             enemy.HP = -1;
@@ -56,7 +56,7 @@ public class EnemiesAI : MonoBehaviour
                 StartCoroutine(BattlePhase());
                 break;
             case (EnemyState.DEAD):
-                //literally doing nothing
+                //die
                 break;
         }
     }
@@ -146,8 +146,5 @@ public class EnemiesAI : MonoBehaviour
     {
         int damageGiven = Mathf.FloorToInt((enemy.ATK * enemy.ATK) / (enemy.ATK + hero.DEF));
         hero.HP = Mathf.Clamp(hero.HP - damageGiven, 0, hero.HP);
-
-        Debug.Log("damage: " + damageGiven);
-        Debug.Log("hero's HP: " + hero.HP);
     }
 }

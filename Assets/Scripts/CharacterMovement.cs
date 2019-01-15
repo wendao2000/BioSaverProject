@@ -3,7 +3,7 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class CharacterMovement : MonoBehaviour
 {
-
+    Animator an;
     Rigidbody2D rb;
 
     //Movement
@@ -27,15 +27,22 @@ public class CharacterMovement : MonoBehaviour
     public LayerMask groundLayer;//the layer on which we can be grounded
     public float radius;
 
-    void Awake()
+    void Start()
     {
+        an = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    void FixedUpdate()
+    {
+        directionX = CrossPlatformInputManager.GetAxisRaw("Horizontal");
+        directionY = CrossPlatformInputManager.GetAxisRaw("Vertical");
     }
 
     void Update()
     {
-        directionX = CrossPlatformInputManager.GetAxisRaw("Horizontal");
-        directionY = CrossPlatformInputManager.GetAxisRaw("Vertical");
+        an.SetFloat("Speed", directionX);
+        an.SetBool("Paralyzed", paralyzed);
 
         #region BetterJump script
         if (rb.velocity.y <= 0)

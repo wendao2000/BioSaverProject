@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 
 public class BattleManager : MonoBehaviour
 {
@@ -44,27 +44,22 @@ public class BattleManager : MonoBehaviour
 
     TurnHandler heroMove = new TurnHandler();
 
-    public int expGained = 0; //broken?
+    public int expGained = 0;
 
     void Start()
     {
         gm = FindObjectOfType<GameManager>();
         statusManager = GetComponent<StatusManager>();
 
-        heroDead = enemyDead = 0;
+        heroDead = enemyDead = 0; //reset dead count
 
-        GenerateEnemies();
+        GenerateEnemies(); //generate enemies
 
         currentState = BattleState.IDLE;
         heroInput = HeroGUI.IDLE;
 
         heroList.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
         enemyList.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
-
-        foreach (GameObject enema in enemyList)
-        {
-            expGained += enema.GetComponent<Enemies>().EXP; //broken
-        }
     }
 
     void Update()
@@ -200,8 +195,15 @@ public class BattleManager : MonoBehaviour
         switch (result)
         {
             case ("WIN"):
+                expGained = 0;
+
+                foreach (GameObject enemy in enemyList)
+                {
+                    expGained += enemy.GetComponent<Enemies>().EXP;
+                }
+
                 endBattlePanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = "You Win";
-                endBattlePanel.transform.Find("ExperienceGained").GetComponent<TextMeshProUGUI>().text = "Experience Gained: " + expGained; //broken
+                endBattlePanel.transform.Find("ExperienceGained").GetComponent<TextMeshProUGUI>().text = "Experience Gained: " + expGained;
                 break;
 
             case ("LOSE"):

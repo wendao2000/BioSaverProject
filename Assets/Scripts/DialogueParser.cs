@@ -31,8 +31,7 @@ public class DialogueParser : MonoBehaviour
     private int currLine;
 
     List<DialogueLine> lines;
-
-    // Use this for initialization
+    
     void Awake()
     {
         sb = new StringBuilder();

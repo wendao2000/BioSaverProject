@@ -27,7 +27,7 @@ public class ExitScene : MonoBehaviour
     public bool collide = false;
     public new bool enabled = false;
 
-    void Awake()
+    void Start()
     {
         gm = FindObjectOfType<GameManager>();
     }

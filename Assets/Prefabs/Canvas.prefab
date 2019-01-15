@@ -4237,7 +4237,7 @@ MonoBehaviour:
   - enemy: {fileID: 11400000, guid: dd65e4ccf78ddae459871abe1fb90bee, type: 2}
   - enemy: {fileID: 11400000, guid: cb830b6ec4b57c240b3d3cf3115571b7, type: 2}
   - enemy: {fileID: 11400000, guid: a05155504c434e84e8473a42f51daf02, type: 2}
-  charaBriefInfo: {fileID: 0}
+  charaBriefInfo: {fileID: 7932233348722179911}
   characterInformation: {fileID: 4802761979741679589}
   inventory: {fileID: 4802761980996445782}
   shop: {fileID: 4802761980539651299}

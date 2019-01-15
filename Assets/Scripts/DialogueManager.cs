@@ -20,8 +20,7 @@ public class DialogueManager : MonoBehaviour
     public Text nameBox;
     public Text dialogueBox;
     public GameObject choiceBox;
-
-
+    
     void Awake()
     {
         dp = FindObjectOfType<DialogueParser>();

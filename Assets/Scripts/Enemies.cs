@@ -28,8 +28,8 @@ public class Enemies : MonoBehaviour
 
         ID = source.enemiesID;
 
-        maxHP = HP = source.enemiesHP;
-        maxMP = MP = source.enemiesMP;
+        HP = maxHP = source.enemiesHP;
+        MP = maxMP = source.enemiesMP;
 
         ATK = source.enemiesATK;
         DEF = source.enemiesDEF;
@@ -41,11 +41,15 @@ public class Enemies : MonoBehaviour
         GetComponent<Animator>().runtimeAnimatorController = source.animator;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
         {
-            StartCoroutine(gm.EnterBattle(ID));
+            if (!gm.interacting)
+            {
+                StartCoroutine(gm.EnterBattle(ID));
+                gm.interacting = true;
+            }
         }
     }
 

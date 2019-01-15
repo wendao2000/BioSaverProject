@@ -69,13 +69,16 @@ public class GameManager : MonoBehaviour
         currentMoney = PlayerPrefs.GetInt("playerMoney", defaultMoney);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Delete))
         {
             Reset();
         }
+    }
 
+    void Update()
+    {
         moneyText.text = currentMoney.ToString(); //get money
 
         #region CharacterInteraction
@@ -198,8 +201,12 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator ExitBattle()
     {
-        //chara.GainExperience(battleManager.expGained); //broken
+        chara.GainExperience(battleManager.expGained);
+
+        PlayerPrefs.SetInt("pLevel", chara.LVL);
         PlayerPrefs.SetInt("pCurEXP", (int)chara.EXP);
+        PlayerPrefs.SetInt("pCurHealth", (int)chara.HP);
+        PlayerPrefs.SetInt("pCurMana", (int)chara.MP);
 
         GameObject.Find("Fade").GetComponent<Animator>().SetTrigger("Fade");
         yield return new WaitForSeconds(1f);
@@ -268,6 +275,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Reset..");
         chara.LVL = 1;
         chara.EXP = 0;
+        chara.HP = chara.maxHP;
+        chara.MP = chara.maxMP;
         PlayerPrefs.DeleteAll();
     }
 

@@ -39,7 +39,7 @@ public class CharacterAI : MonoBehaviour
     {
         if (chara.HP == 0)
         {
-            an.SetTrigger("Dead");
+            //an.SetTrigger("Dead"); //no animation, yet.
             bm.heroDead++;
             currentState = HeroState.DEAD;
             chara.HP = -1;
@@ -54,18 +54,18 @@ public class CharacterAI : MonoBehaviour
                 //wait for input
                 break;
             case (HeroState.WAITPHASE):
-                //idle | wait for turn
+                //idle
                 break;
             case (HeroState.BATTLEPHASE):
                 StartCoroutine(BattlePhase());
                 break;
             case (HeroState.DEAD):
-                Debug.Log(name + " is dead");
+                //die
                 break;
         }
     }
 
-    void DrawPhase()
+    private void DrawPhase()
     {
         float cooldownRatio;
 
@@ -92,7 +92,7 @@ public class CharacterAI : MonoBehaviour
         }
     }
 
-    IEnumerator BattlePhase()
+    private IEnumerator BattlePhase()
     {
         if (actionDone)
         {
@@ -133,11 +133,6 @@ public class CharacterAI : MonoBehaviour
         currentState = HeroState.DRAWPHASE;
     }
 
-    private void DeadPhase()
-    {
-        an.SetTrigger("Dead");
-    }
-
     private bool Move(Vector3 target)
     {
         return target != (transform.position = Vector3.MoveTowards(transform.position, target, 20f * Time.deltaTime));
@@ -151,8 +146,5 @@ public class CharacterAI : MonoBehaviour
 
         int damageGiven = Mathf.FloorToInt((attack * attack) / (attack + enemy.DEF));
         enemy.HP = Mathf.Clamp(enemy.HP - damageGiven, 0, enemy.HP);
-
-        Debug.Log("damage: " + damageGiven);
-        Debug.Log("enemy's HP: " + enemy.HP);
     }
 }

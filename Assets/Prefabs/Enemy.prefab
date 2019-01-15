@@ -112,12 +112,12 @@ MonoBehaviour:
   ID: 0
   maxHP: 0
   maxMP: 0
-  HP: 0
-  MP: 0
-  ATK: 0
-  DEF: 0
-  FLEE: 0
-  EXP: 0
+  HP: -1
+  MP: -1
+  ATK: -1
+  DEF: -1
+  FLEE: -1
+  EXP: -1
 --- !u!95 &7710915593625495352
 Animator:
   serializedVersion: 3
