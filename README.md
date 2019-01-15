@@ -43,10 +43,10 @@ https://assetstore.unity.com/packages/2d/gui/icons/simple-ui-103969
 
 - - - - -
 
-GAT LA04 Tanricko 2001548333
-GAT LA04 Johan Kurnia 2001536762
-GAT LA04 Bhaswara Arizon 2001562754
-GAT LA04 Willy Gunawan Febryanto 200159772
-GAT LB04 William Nathanael Sugiharto 2001540974
+- GAT LA04 Tanricko 2001548333
+- GAT LA04 Johan Kurnia 2001536762
+- GAT LA04 Bhaswara Arizon 2001562754
+- GAT LA04 Willy Gunawan Febryanto 200159772
+- GAT LB04 William Nathanael Sugiharto 2001540974
 
 - - - - -
