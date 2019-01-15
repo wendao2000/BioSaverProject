@@ -5,7 +5,9 @@ using UnityStandardAssets.CrossPlatformInput;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Enemies : MonoBehaviour
 {
-    public ScriptEnemies source;
+    GameManager gm;
+
+    public ScriptEnemies source; //enemy's information file
 
     [HideInInspector] public int ID;
     [HideInInspector] public float maxHP, maxMP;
@@ -20,6 +22,8 @@ public class Enemies : MonoBehaviour
 
     void Start()
     {
+        gm = FindObjectOfType<GameManager>();
+
         name = source.enemiesName;
 
         ID = source.enemiesID;
@@ -41,20 +45,15 @@ public class Enemies : MonoBehaviour
     {
         if (collide && CrossPlatformInputManager.GetButtonDown("Interact"))
         {
-            FindObjectOfType<GameManager>().EnterBattle(ID);
+            StartCoroutine(gm.EnterBattle(ID));
         }
     }
 
     private void OnMouseDown() //BattleMode
     {
-        if (FindObjectOfType<BattleManager>())
+        if (gm.battleManager != null)
         {
-            FindObjectOfType<StatusManager>().GetObject(null, this);
-
-            if (!FindObjectOfType<StatusManager>().statusPanel.activeSelf)
-            {
-                FindObjectOfType<ButtonManager>().ToggleStatusPanel();
-            }
+            gm.battleManager.statusManager.GetObject(null, this);
         }
     }
 
@@ -63,7 +62,7 @@ public class Enemies : MonoBehaviour
         if (collision.tag == "Player")
         {
             collide = true;
-            //gm.UpdateInteraction("Fight");
+            gm.UpdateInteraction("Battle");
         }
     }
 
@@ -72,7 +71,7 @@ public class Enemies : MonoBehaviour
         if (collision.tag == "Player")
         {
             collide = false;
-            //gm.UpdateInteraction("Normal");
+            gm.UpdateInteraction("Normal");
         }
     }
 }

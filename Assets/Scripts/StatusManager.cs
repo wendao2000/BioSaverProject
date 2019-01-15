@@ -5,7 +5,6 @@ using TMPro;
 public class StatusManager : MonoBehaviour
 {
     public GameObject statusPanel;
-    public GameObject toggleButton;
 
     Character chara;
     Enemies enemy;
@@ -55,5 +54,15 @@ public class StatusManager : MonoBehaviour
     {
         this.chara = chara;
         this.enemy = enemy;
+
+        if (!statusPanel.activeSelf)
+        {
+            Toggle();
+        }
+    }
+
+    public void Toggle()
+    {
+        statusPanel.SetActive(!statusPanel.activeSelf);
     }
 }

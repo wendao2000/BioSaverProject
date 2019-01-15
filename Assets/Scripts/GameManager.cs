@@ -4,32 +4,37 @@ using UnityEngine.SceneManagement;
 using UnityStandardAssets.CrossPlatformInput;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    enum InteractButton
+    {
+        Normal,
+        Shop,
+        Battle,
+        Exit
+    }
+
     public static GameManager instance;
 
-    [HideInInspector] public BattleManager bm;
-    [HideInInspector] public ButtonManager bt;
-    [HideInInspector] public CharacterMovement ch;
-    [HideInInspector] public CharacterInventory cv;
-    [HideInInspector] public ShopManager sm;
+    [HideInInspector] public BattleManager battleManager;
+    [HideInInspector] public ButtonManager buttonManager;
+    [HideInInspector] public CharacterMovement charaMove;
+    [HideInInspector] public CharacterInventory charaInven;
+    [HideInInspector] public ShopManager shopManager;
 
-    public EnemiesList[] enemies;
+    public EnemiesList[] enemies; //temporary database
 
-    [Header("Canvas References")]
-    //redirect to canvas
-    public GameObject shop;
-    public GameObject inventory;
+    [Header("Canvas References")] //redirect to canvas GameObject
     public GameObject characterInformation;
-    public GameObject battleMode;
+    public GameObject inventory;
+    public GameObject shop;
     public TextMeshProUGUI moneyText;
 
     [Header("Merchant References")]
-    //merchant needs this
     public GameObject shopContentPanel;
     public GameObject confirmationPanel;
-    //item goes here
     public GameObject inventoryList;
 
     [Header("Battle References")]
@@ -37,42 +42,41 @@ public class GameManager : MonoBehaviour
     public Transform secondPanel;
 
     [Header("Player's Inventory")]
-    public int defaultMoney = 500;
+    private readonly int defaultMoney = 1000; //values to be edited
     public int currentMoney = 0;
 
     [Header("Character's Interaction")]
     public bool interacting = false;
 
     [Header("General")]
-    public bool inBattle = false;
-    public Button interactionButton; //redirect to virtual interaction button
+    public Button interactButton; //redirect to virtual interaction button
 
-    //Character Start Position based on last exit scene
-    [HideInInspector] public Vector2 startPos;
+    [HideInInspector] public Vector2 startPos; //Character startPos based on last exit scene
 
-    void Awake()
+    //Dictionary<string, Sprite> buttonList = new Dictionary<string, Sprite>(); //doesn't work(?) on Unity
+
+    public Sprite[] buttonList;
+
+    void Start()
     {
-        if (!instance)
-        {
-            instance = this;
-        }
+        interactButton.GetComponent<Image>().sprite = buttonList[(int)InteractButton.Normal]; //reset virtual interaction button to normal
+
+        battleManager = FindObjectOfType<BattleManager>();
+        buttonManager = FindObjectOfType<ButtonManager>();
+        charaMove = FindObjectOfType<CharacterMovement>();
+        charaInven = FindObjectOfType<CharacterInventory>();
+        shopManager = FindObjectOfType<ShopManager>();
     }
 
     void Update()
     {
-        moneyText.text = currentMoney.ToString();
+        moneyText.text = currentMoney.ToString(); //get money
 
-        #region Character Interaction
-        if (CrossPlatformInputManager.GetButtonDown("Cancel"))
+        #region CharacterInteraction
+        if (CrossPlatformInputManager.GetButtonDown("Cancel")) //press ESC button or back button on Android
         {
             if (interacting)
             {
-                if (shop.activeSelf)
-                {
-                    sm.DestroyShopContent();
-                    Shop();
-                }
-
                 if (characterInformation.activeSelf)
                 {
                     CharacterInformation();
@@ -83,19 +87,20 @@ public class GameManager : MonoBehaviour
                     Inventory();
                 }
 
-                //if (pauseMenu.activeSelf)
-                //{
-                //    PauseMenu();
-                //}
+                if (shop.activeSelf)
+                {
+                    shopManager.DestroyShopContent();
+                    Shop();
+                }
             }
 
             else
             {
-                //PauseMenu();
+                Pause();
             }
         }
 
-        if (CrossPlatformInputManager.GetButtonDown("CharacterInformation"))
+        if (CrossPlatformInputManager.GetButtonDown("CharacterInformation")) //press C button
         {
             if (!interacting || characterInformation.activeSelf)
             {
@@ -103,7 +108,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (CrossPlatformInputManager.GetButtonDown("Inventory"))
+        if (CrossPlatformInputManager.GetButtonDown("Inventory")) //press I button
         {
             if (!interacting || inventory.activeSelf)
             {
@@ -114,76 +119,106 @@ public class GameManager : MonoBehaviour
     }
 
     #region UI Interaction
-
-    public void Shop()
-    {
-        if (!shop.activeSelf)
-        {
-            sm.GenerateShopContent();
-        }
-        else
-        {
-            sm.DestroyShopContent();
-        }
-
-        ch.paralyzed = !ch.paralyzed;
-        interacting = !interacting;
-        shop.SetActive(!shop.activeSelf);
-    }
-
     public void CharacterInformation()
     {
-        ch.paralyzed = !ch.paralyzed;
         interacting = !interacting;
+        charaMove.paralyzed = !charaMove.paralyzed;
         characterInformation.SetActive(!characterInformation.activeSelf);
     }
 
     public void Inventory()
     {
-        ch.paralyzed = !ch.paralyzed;
+        charaMove.paralyzed = !charaMove.paralyzed;
         interacting = !interacting;
         inventory.SetActive(!inventory.activeSelf);
     }
 
-    public void UpdateInteraction(string value)
+    public void Shop()
     {
-        //update image of interact button
+        if (!shop.activeSelf)
+        {
+            shopManager.GenerateShopContent();
+        }
+
+        else
+        {
+            shopManager.DestroyShopContent();
+        }
+
+        charaMove.paralyzed = !charaMove.paralyzed;
+        interacting = !interacting;
+        shop.SetActive(!shop.activeSelf);
     }
 
+    public void UpdateInteraction(string value)
+    {
+        switch (value)
+        {
+            case "Normal":
+                interactButton.GetComponent<Image>().sprite = buttonList[(int)InteractButton.Normal];
+                break;
+
+            case "Shop":
+                interactButton.GetComponent<Image>().sprite = buttonList[(int)InteractButton.Shop];
+                break;
+
+            case "Battle":
+                interactButton.GetComponent<Image>().sprite = buttonList[(int)InteractButton.Battle];
+                break;
+
+            case "Exit":
+                interactButton.GetComponent<Image>().sprite = buttonList[(int)InteractButton.Exit];
+                break;
+
+        }
+    }
     #endregion
 
     #region BattleMode
-    public void EnterBattle(int index)
+    public IEnumerator EnterBattle(int index)
     {
         PlayerPrefs.SetInt("EnemiesID", index);
         PlayerPrefs.SetInt("lastScene", SceneManager.GetActiveScene().buildIndex);
-        PlayerPrefs.SetFloat("startPos.X", ch.transform.position.x);
-        PlayerPrefs.SetFloat("startPos.Y", ch.transform.position.y);
-        battleMode.SetActive(true);
-        StartCoroutine(Fade());
+        PlayerPrefs.SetFloat("startPos.X", charaMove.transform.position.x);
+        PlayerPrefs.SetFloat("startPos.Y", charaMove.transform.position.y);
+        GameObject.Find("Fade").GetComponent<Animator>().SetTrigger("Fade");
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("BattleScene");
     }
 
-    public void ExitBattle()
+    public IEnumerator ExitBattle()
     {
-        battleMode.SetActive(false);
+        GameObject.Find("Fade").GetComponent<Animator>().SetTrigger("Fade");
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(PlayerPrefs.GetInt("lastScene"));
     }
     #endregion
 
     #region MainMenu
-
-    public void MainMenu()
+    public void MainMenu() //play animation
     {
         GameObject.Find("MainMenu").GetComponent<Animator>().SetTrigger("MainMenu");
     }
 
-    public void Play()
+    public IEnumerator Play() //play animation
     {
-        StartCoroutine(Fade());
+        GameObject.Find("Fade").GetComponent<Animator>().SetTrigger("Fade");
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    #endregion
+
+    #region Gameplay
+    public void Pause()
+    {
+        
+    }
+
+    public void Setting()
+    {
+
+    }
     #endregion
 
     #region ENEMIES DATABASE???
@@ -205,15 +240,6 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    #region Animator
-    public IEnumerator Fade()
-    {
-        GameObject.Find("Fade").GetComponent<Animator>().SetTrigger("Fade");
-
-        yield return new WaitForSeconds(1f);
-    }
-    #endregion
-
     #region Miscellaneous
     public void Save()
     {
@@ -227,28 +253,9 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        bt = FindObjectOfType<ButtonManager>();
-        bm = FindObjectOfType<BattleManager>();
-        ch = FindObjectOfType<CharacterMovement>();
-        cv = FindObjectOfType<CharacterInventory>();
-        sm = FindObjectOfType<ShopManager>();
+        //startPos = new Vector2(PlayerPrefs.GetFloat("startPos.X"),PlayerPrefs.GetFloat("startPos.Y"));
 
-        startPos = new Vector2(
-            PlayerPrefs.HasKey("startPos.X") ? PlayerPrefs.GetFloat("startPos.X", 6f) : 6f,
-            PlayerPrefs.HasKey("startPos.Y") ? PlayerPrefs.GetFloat("startPos.Y", -2f) : -2f
-            );
-
-        currentMoney = PlayerPrefs.HasKey("playerMoney") ? PlayerPrefs.GetInt("playerMoney", defaultMoney) : defaultMoney;
-    }
-
-    public static GameManager GetInstance()
-    {
-        return instance;
-    }
-
-    public void OnApplicationQuit()
-    {
-        PlayerPrefs.DeleteAll();
+        currentMoney = PlayerPrefs.GetInt("playerMoney", defaultMoney);
     }
     #endregion
 }

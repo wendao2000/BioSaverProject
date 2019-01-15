@@ -4,13 +4,18 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public enum Direction
 {
-    Left, Right
-};
+    Left,
+    Right
+}
 
 public enum GroundLevel
 {
-    Zero, One, Two, Three, Four
-};
+    Zero,
+    One,
+    Two,
+    Three,
+    Four
+}
 
 public class ExitScene : MonoBehaviour
 {
@@ -96,12 +101,10 @@ public class ExitScene : MonoBehaviour
         {
             collide = true;
 
-            //gm.UpdateInteraction("ExitScene");
-
-            /*if (enabled)
-                {
-                    Debug.Log("Entering " + gameObject.name);
-                }*/
+            if (enabled)
+            {
+                gm.UpdateInteraction("Exit");
+            }
         }
     }
 
@@ -111,12 +114,10 @@ public class ExitScene : MonoBehaviour
         {
             collide = false;
 
-            //gm.UpdateInteraction("Normal");
-
-            /*if (enabled)
-                {
-                    Debug.Log("Exiting " + gameObject.name);
-                }*/
+            if (enabled)
+            {
+                gm.UpdateInteraction("Normal");
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ public class ShopManager : MonoBehaviour
 
     void Start()
     {
-        gm = GameManager.GetInstance();
+        gm = FindObjectOfType<GameManager>();
         confirmPanel = gm.confirmationPanel.transform;
     }
 
@@ -81,27 +81,27 @@ public class ShopManager : MonoBehaviour
 
         BuyConfirmation(itemPrice);
 
-        while (!gm.bt.pressed)
+        while (!gm.buttonManager.pressed)
         {
             yield return null;
         }
 
-        if (gm.bt.confirmed)
+        if (gm.buttonManager.confirmed)
         {
             if (gm.currentMoney >= itemPrice)
             {
                 BuyNotification(true);
                 gm.currentMoney -= itemPrice;
-                gm.cv.inventoryList.Add(Instantiate(objectToBuy));
-                Destroy(gm.cv.inventoryList.LastOrDefault().GetComponent<ShopItem>());
-                gm.cv.inventoryList.LastOrDefault().transform.SetParent(gm.inventoryList.transform);
+                gm.charaInven.inventoryList.Add(Instantiate(objectToBuy));
+                Destroy(gm.charaInven.inventoryList.LastOrDefault().GetComponent<ShopItem>());
+                gm.charaInven.inventoryList.LastOrDefault().transform.SetParent(gm.inventoryList.transform);
             }
             else
             {
                 BuyNotification(false);
             }
 
-            while (!gm.bt.pressed)
+            while (!gm.buttonManager.pressed)
             {
                 yield return null;
             }
@@ -113,7 +113,7 @@ public class ShopManager : MonoBehaviour
     void BuyConfirmation(int itemPrice)
     {
         //reset state of button and confirmation text
-        gm.bt.pressed = false;
+        gm.buttonManager.pressed = false;
         gm.confirmationPanel.SetActive(true);
         confirmPanel.Find("Description").GetComponent<TextMeshProUGUI>().text = "Price: " + itemPrice + "\nAre you sure about this?";
         confirmPanel.Find("ButtonYes").gameObject.SetActive(true);
@@ -124,7 +124,7 @@ public class ShopManager : MonoBehaviour
     void BuyNotification(bool value)
     {
         //reset state of button again
-        gm.bt.pressed = false;
+        gm.buttonManager.pressed = false;
         confirmPanel.Find("ButtonYes").gameObject.SetActive(false);
         confirmPanel.Find("ButtonNo").gameObject.SetActive(false);
         confirmPanel.Find("ButtonConfirm").gameObject.SetActive(true);
@@ -140,11 +140,10 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    #region PROTOTYPE -- NEED DATABASE TO CONTINUE THIS PART OF CODE
+    #region ITEM DATABASE
     Type ItemSlotCheck(int itemID)
     {
         //check itemID from database
-
         if (itemID == 10)
         {
             return typeof(Weapon);
@@ -166,7 +165,7 @@ public class ShopManager : MonoBehaviour
         if (collision.tag == "Player")
         {
             collide = true;
-            //gm.UpdateInteraction("Shop");
+            gm.UpdateInteraction("Shop");
         }
     }
 
@@ -175,7 +174,7 @@ public class ShopManager : MonoBehaviour
         if (collision.tag == "Player")
         {
             collide = false;
-            //gm.UpdateInteraction("Normal");
+            gm.UpdateInteraction("Normal");
         }
     }
 }

@@ -2,25 +2,66 @@
 
 public class ButtonManager : MonoBehaviour
 {
-    public static ButtonManager instance;
-
-    BattleManager bm;
     GameManager gm;
-    StatusManager sm;
 
     public bool confirmed = false;
     public bool pressed = false;
 
     void Start()
     {
-        bm = FindObjectOfType<BattleManager>();
-        gm = GameManager.GetInstance();
-
-        if (bm != null)
-        {
-            sm = bm.GetComponent<StatusManager>();
-        }
+        gm = FindObjectOfType<GameManager>();
     }
+
+    #region BattleMode
+    public void BattleAttack()
+    {
+        gm.battleManager.Attack();
+    }
+
+    public void BattleMagic()
+    {
+        gm.battleManager.Magic();
+    }
+
+    public void BattleItem()
+    {
+        gm.battleManager.UseItem();
+    }
+
+    public void BattleFlee()
+    {
+        gm.battleManager.Flee();
+    }
+
+    public void ClosePanel()
+    {
+        gm.battleManager.statusManager.Toggle();
+    }
+
+    public void ContinueJourney()
+    {
+        StartCoroutine(gm.ExitBattle());
+    }
+    #endregion
+
+    #region MainMenu
+    public void MainMenu()
+    {
+        gm.MainMenu();
+    }
+
+    public void Play()
+    {
+        StartCoroutine(gm.Play());
+    }
+    #endregion
+
+    #region Gameplay
+    public void Setting()
+    {
+        gm.Setting();
+    }
+    #endregion
 
     public void Confirm(bool value)
     {
@@ -34,50 +75,6 @@ public class ButtonManager : MonoBehaviour
             confirmed = false;
         }
     }
-
-    #region BattleMode
-
-    public void Attack()
-    {
-        bm.Attack();
-    }
-
-    public void Magic()
-    {
-        bm.Magic();
-    }
-
-    public void UseItem()
-    {
-        bm.UseItem();
-    }
-
-    public void Flee()
-    {
-        bm.Flee();
-    }
-
-    public void ToggleStatusPanel()
-    {
-        sm.statusPanel.SetActive(!sm.statusPanel.activeSelf);
-        sm.toggleButton.SetActive(!sm.toggleButton.activeSelf);
-    }
-
-    #endregion
-
-    #region MainMenu
-
-    public void MainMenu()
-    {
-        gm.MainMenu();
-    }
-
-    public void Play()
-    {
-        gm.Play();
-    }
-
-    #endregion
 
     public void ButtonPress()
     {

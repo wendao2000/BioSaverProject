@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
     GameManager gm;
 
-    public GameObject enemy;
+    [HideInInspector] public StatusManager statusManager;
+    
     public GameObject endBattlePanel;
 
     public enum BattleState
@@ -28,28 +28,31 @@ public class BattleManager : MonoBehaviour
     public BattleState currentState;
     public HeroGUI heroInput;
 
-    [HideInInspector] public int heroDead, enemyDead;
+    [HideInInspector] public int heroDead, enemyDead; //check if there's still heroes or enemies available on field
 
-    //prefab
-    public GameObject enemyButton;
+    [Header("Prefab")]
+    public GameObject enemy; //spawn enemies using this prefab
+    public GameObject enemyButton; //use this button setting
 
-    public List<TurnHandler> performList = new List<TurnHandler>();
-
-    //static list
-    public List<GameObject> heroList = new List<GameObject>();
-    public List<GameObject> enemyList = new List<GameObject>();
-
-    //dynamic queue
-    public List<GameObject> heroQueue = new List<GameObject>();
+    [Header("Battle Manager")]
+    public List<TurnHandler> performList = new List<TurnHandler>(); //current object's turn
+    
+    public List<GameObject> heroList = new List<GameObject>(); //get all heroes on field
+    public List<GameObject> enemyList = new List<GameObject>(); //get all enemies on field
+    
+    public List<GameObject> heroQueue = new List<GameObject>(); //current hero's turn (if not null, pause cooldown)
 
     TurnHandler heroMove = new TurnHandler();
 
     void Start()
     {
-        gm.inBattle = true;
+        gm = FindObjectOfType<GameManager>();
+        statusManager = GetComponent<StatusManager>();
 
         currentState = BattleState.IDLE;
         heroInput = HeroGUI.IDLE;
+
+        GenerateEnemies();
 
         heroList.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
         enemyList.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
@@ -82,7 +85,7 @@ public class BattleManager : MonoBehaviour
         switch (heroInput)
         {
             case (HeroGUI.IDLE):
-                //idle, wait for cooldown
+                //idle, wait for action
                 if (heroQueue.Count > 0)
                 {
                     heroInput = HeroGUI.ACTIVATE;
@@ -110,7 +113,6 @@ public class BattleManager : MonoBehaviour
     }
 
     #region ActionButton
-
     public void Attack()
     {
         heroMove.source = heroQueue[0];
@@ -136,11 +138,9 @@ public class BattleManager : MonoBehaviour
     {
 
     }
-
     #endregion
 
-    #region Miscellaneous
-
+    #region HeroInput
     public void Target(GameObject obj)
     {
         heroMove.target = obj;
@@ -164,9 +164,9 @@ public class BattleManager : MonoBehaviour
     {
         performList.Add(input);
     }
-
     #endregion
 
+    #region BattleState
     void PerformAction()
     {
         GameObject performer = performList[0].source;
@@ -188,14 +188,27 @@ public class BattleManager : MonoBehaviour
         switch (result)
         {
             case ("WIN"):
+                int expGained = 0;
+                foreach(GameObject enemy in enemyList)
+                {
+                    expGained += enemy.GetComponent<Enemies>().EXP;
+                }
+
                 endBattlePanel.SetActive(true);
+                endBattlePanel.GetComponent<Animator>().SetTrigger("Activate");
+                endBattlePanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = "You Win";
+                endBattlePanel.transform.Find("ExperienceGained").GetComponent<TextMeshProUGUI>().text = "Experience Gained: " + expGained;
                 break;
 
             case ("LOSE"):
                 endBattlePanel.SetActive(true);
+                endBattlePanel.GetComponent<Animator>().SetTrigger("Activate");
+                endBattlePanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = "You Lose";
+                endBattlePanel.transform.Find("ExperienceGained").GetComponent<TextMeshProUGUI>().text = "";
                 break;
         }
     }
+    #endregion
 
     public void SpawnEnemyButton()
     {
@@ -219,17 +232,5 @@ public class BattleManager : MonoBehaviour
         GameObject newEnemy = Instantiate(enemy);
         newEnemy.transform.position = new Vector2(6.5f, 1.5f);
         newEnemy.GetComponent<Enemies>().source = gm.GetEnemies(PlayerPrefs.GetInt("EnemiesID"));
-    }
-
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        gm = GameManager.GetInstance();
-
-        GenerateEnemies();
     }
 }

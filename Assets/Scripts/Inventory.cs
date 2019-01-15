@@ -18,7 +18,7 @@ public class Inventory : MonoBehaviour
             gameObject.AddComponent<Button>();
         }
 
-        transform.SetParent(GameManager.GetInstance().shopContentPanel.transform);
+        transform.SetParent(FindObjectOfType<GameManager>().shopContentPanel.transform);
 
         GetComponent<RectTransform>().localScale = Vector3.one;
     }

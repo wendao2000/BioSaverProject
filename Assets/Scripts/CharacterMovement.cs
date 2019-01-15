@@ -40,11 +40,13 @@ public class CharacterMovement : MonoBehaviour
         #region BetterJump script
         if (rb.velocity.y <= 0)
         {
+            //reach the peak of jumping
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
             GroundCheck();
         }
         else if (rb.velocity.y > 0 && !CrossPlatformInputManager.GetButton("Jump"))
         {
+            //low jump
             rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
         }
         #endregion
